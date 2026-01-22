@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Docker image tag (e.g. v1.0.0)"
+        description: "Docker image tag (e.g. latest, v1.0.0)"
         required: false
         default: latest
 
 permissions:
   contents: read
-  packages: write
+  packages: write   # REQUIRED for GHCR push
 
 jobs:
   docker:
@@ -36,4 +36,4 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ inputs.tag }}
+            ghcr.io/${{ github.repository_owner }}/django_healthcheck:${{ inputs.tag }}
