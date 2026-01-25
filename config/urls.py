@@ -20,5 +20,5 @@ from healthcheck import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", views.helloWorld,name="helloworld"),
+    path('', include('hello.urls')),
 ]
