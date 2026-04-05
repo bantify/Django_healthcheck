@@ -12,12 +12,14 @@ podman pull ghcr.io/bantify/django_healthcheck:latest
 
 podman run -d --name healthcheck -p 8080:8080 -v healthcheck:/var/log/healthcheck:ro ghcr.io/bantify/django_healthcheck:latest
 
+podman logs healthcheck
 
 podman exec -it healthcheck /bin/bash
 podman image rm 7b3e3ddc24c1
 Container delete
 podman rm 282bf9182790
 
+```
 
 ## Installing Bootstrap in a Django Project
 
@@ -34,7 +36,7 @@ This method does **not require downloading Bootstrap**.
 ### Step 1: Create / Update Base Template
 
 Download bootstrap from internet:
-
+```
 project/
 ├── static/
 │   └── bootstrap/
@@ -43,7 +45,7 @@ project/
 ├── templates/
 │   └── base.html
 
-
+```
 Create a base template (if not already created):
 
 ```bash
