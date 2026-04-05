@@ -1,8 +1,94 @@
-venv/
+# =========================
+# Python
+# =========================
 __pycache__/
-*.pyc
-.env
+*.py[cod]
+*$py.class
+.Python
+
+# =========================
+# Virtual environments
+# =========================
+venv/
+env/
+ENV/
+.venv/
+
+# =========================
+# Django
+# =========================
+*.log
+local_settings.py
 db.sqlite3
+db.sqlite3-journal
+
+# Django media & static (optional)
+media/
+staticfiles/
+
+# =========================
+# Django migrations (ignore files, keep folder)
+# =========================
 **/migrations/*
 !**/migrations/__init__.py
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# IDEs / Editors
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# =========================
+# Test / coverage
+# =========================
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+nosetests.xml
+coverage.xml
+
+# =========================
+# Build / packaging
+# =========================
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# =========================
+# Jupyter / notebooks
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Celery / Redis (optional)
+# =========================
+celerybeat-schedule
+celerybeat.pid
+
+# =========================
+# Docker (optional)
+# =========================
+*.pid
+docker-compose.override.yml
 
