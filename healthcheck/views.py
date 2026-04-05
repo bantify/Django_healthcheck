@@ -18,7 +18,7 @@ def generate_health_check_report(req):
 
 
 class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
-    template_name = "healthcheck/healthcheck.html"
+    template_name = "healthcheck/home.html"
     STORAGE_DIR = Path("/var/log/healthcheck/storage")
 
     def get_context_data(self, **kwargs):
