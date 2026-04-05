@@ -127,14 +127,15 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 #EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
-EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_PORT = 2525
+#EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST = '10.74.11.201'
+#EMAIL_PORT = 2525
 
-EMAIL_HOST_USER = "6016fb4b6c8efe"
-EMAIL_HOST_PASSWORD = "1faf2f176c111d"
+#EMAIL_HOST_USER = "6016fb4b6c8efe"
+#EMAIL_HOST_PASSWORD = "1faf2f176c111d"
 
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+#EMAIL_USE_TLS = True
+#EMAIL_USE_SSL = False
 
 DEFAULT_FROM_EMAIL = 'HealthCheck <no-reply@qvantel.com>'
 
