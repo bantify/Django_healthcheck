@@ -5,16 +5,8 @@ from pathlib import Path
 from django.utils import timezone
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+
 from django.views.generic import TemplateView
-
-
-# Create your views here.
-@login_required
-def generate_health_check_report(req):
-    context = {}
-    return render(req, "healthcheck/healthcheck.html", context)
 
 
 class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
