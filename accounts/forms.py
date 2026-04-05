@@ -2,7 +2,8 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm, AuthenticationForm
 from django.template.loader import render_to_string
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
+
 from accounts.models import User
 
 
@@ -63,10 +64,8 @@ class RegisterForm(UserCreationForm):
         return email
 
 
-class CustomPasswordResetForm(PasswordResetForm):
 
-    email_template_name = "accounts/password_reset_email.txt"
-    html_email_template_name = "accounts/password_reset_email.html"
+class CustomPasswordResetForm(PasswordResetForm):
 
     email = forms.EmailField(
         label="Email",
@@ -80,37 +79,11 @@ class CustomPasswordResetForm(PasswordResetForm):
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
-
         if not email.lower().endswith(self.ALLOWED_DOMAINS):
             raise forms.ValidationError(
                 "Email must be a Qvantel or Banglalink email address"
             )
-
         return email
-
-    def send_mail(
-        self,
-        subject_template_name,   # ignored
-        email_template_name,
-        context,
-        from_email,
-        to_email,
-        html_email_template_name=None,
-    ):
-        # ✅ Subject from settings.py
-        subject = settings.PASSWORD_RESET_EMAIL_SUBJECT
-
-        # ✅ Email body (existing Django template)
-        body = render_to_string(email_template_name, context)
-
-        send_mail(
-            subject,
-            body,
-            from_email,
-            [to_email],
-            fail_silently=False,
-        )
-
 
 class CustomSetPasswordForm(SetPasswordForm):
     new_password1 = forms.CharField(
@@ -136,11 +109,12 @@ class CustomSetPasswordForm(SetPasswordForm):
 
 class CustomAuthenticationForm(AuthenticationForm):
 
-    username = forms.CharField(
+    username = forms.EmailField(
         label="Email",
         required=True,
         error_messages={
             "required": "Email is required",
+            "invalid": "Enter a valid email address",
         },
     )
 
