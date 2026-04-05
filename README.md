@@ -8,6 +8,7 @@
 
 
 ```bash
+touch /home/infraadmin/db.sqlite3
 podman pull ghcr.io/bantify/django_healthcheck:latest
 
 podman run -d --name healthcheck -p 8000:8000 -v /home/infraadmin/db.sqlite3:/app/db.sqlite3 -v /home/infraadmin/healthcheck:/var/log/healthcheck:ro ghcr.io/bantify/django_healthcheck:latest
