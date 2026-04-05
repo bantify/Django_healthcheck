@@ -128,7 +128,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 #EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST = '10.74.11.201'
+EMAIL_HOST = '172.16.7.57'
 #EMAIL_PORT = 2525
 
 #EMAIL_HOST_USER = "6016fb4b6c8efe"
