@@ -53,8 +53,6 @@ class RegisterForm(UserCreationForm):
 
         return mobile
 
-    ALLOWED_DOMAINS = ("@qvantel.com", "@banglalink.net")
-
     def clean_email(self):
         email = self.cleaned_data.get("email")
 
@@ -74,12 +72,6 @@ class CustomPasswordResetForm(PasswordResetForm):
             "invalid": "Enter a valid email address",
         },
     )
-
-    def send_mail(self, *args, **kwargs):
-        try:
-            super().send_mail(*args, **kwargs)
-        except Exception:
-            raise  # re-raise so the view can catch it
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
@@ -137,9 +129,9 @@ class CustomAuthenticationForm(AuthenticationForm):
     }
 
     def clean_username(self):
-        email = self.cleaned_data.get("username")
-        if not email.lower().endswith(ALLOWED_DOMAINS):
+        username = self.cleaned_data.get("username")
+        if not username.lower().endswith(ALLOWED_DOMAINS):
             raise forms.ValidationError(
                 "Email must be a Qvantel or Banglalink email address"
             )
-        return email
+        return username
