@@ -6,6 +6,8 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 
 from accounts.models import User
 
+ALLOWED_DOMAINS = ("@qvantel.com", "@banglalink.net")
+
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(
@@ -64,9 +66,7 @@ class RegisterForm(UserCreationForm):
         return email
 
 
-
 class CustomPasswordResetForm(PasswordResetForm):
-
     email = forms.EmailField(
         label="Email",
         error_messages={
@@ -75,15 +75,20 @@ class CustomPasswordResetForm(PasswordResetForm):
         },
     )
 
-    ALLOWED_DOMAINS = ("@qvantel.com", "@banglalink.net")
+    def send_mail(self, *args, **kwargs):
+        try:
+            super().send_mail(*args, **kwargs)
+        except Exception:
+            raise  # re-raise so the view can catch it
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
-        if not email.lower().endswith(self.ALLOWED_DOMAINS):
+        if not email.lower().endswith(ALLOWED_DOMAINS):
             raise forms.ValidationError(
                 "Email must be a Qvantel or Banglalink email address"
             )
         return email
+
 
 class CustomSetPasswordForm(SetPasswordForm):
     new_password1 = forms.CharField(
@@ -108,7 +113,6 @@ class CustomSetPasswordForm(SetPasswordForm):
 # forms.py
 
 class CustomAuthenticationForm(AuthenticationForm):
-
     username = forms.EmailField(
         label="Email",
         required=True,
@@ -132,3 +136,10 @@ class CustomAuthenticationForm(AuthenticationForm):
         "inactive": "This account is inactive.",
     }
 
+    def clean_username(self):
+        email = self.cleaned_data.get("username")
+        if not email.lower().endswith(ALLOWED_DOMAINS):
+            raise forms.ValidationError(
+                "Email must be a Qvantel or Banglalink email address"
+            )
+        return email
