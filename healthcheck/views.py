@@ -53,6 +53,18 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
             if storage_file_path.exists():
                 with open(storage_file_path, "r") as f:
                     context["storage_data"] = json.load(f)
+                # ================= CPG CALCULATION (3PAR) =================
+                if s.get("type") == "3par" and "cpg" in s:
+                    for cpg_name, cpg_data in s["cpg"].items():
+                        total = cpg_data.get("total_mib", 0)
+                        free = cpg_data.get("free_mib", 0)
+
+                        if total > 0:
+                            cpg_data["free_percent"] = round((free / total) * 100, 2)
+                            cpg_data["used_percent"] = round(100 - cpg_data["free_percent"], 2)
+                        else:
+                            cpg_data["free_percent"] = 0
+                            cpg_data["used_percent"] = 0
                 context["storage_file_exists"] = True
             else:
                 context["storage_error"] = "Storage health file not found."
