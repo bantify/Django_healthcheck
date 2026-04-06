@@ -136,7 +136,7 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
 
         try:
             if f5_path.exists():
-                context["vcenter_data"] = json.loads(f5_path.read_text())
+                context["vcenter_data"] = json.loads(vcenter_path.read_text())
                 context["vcenter_file_exists"] = True
             for vc in context["vcenter_data"]:
                 for ds in vc["datastores_info"]["datastores"]:
