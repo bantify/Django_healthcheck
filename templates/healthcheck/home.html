@@ -41,26 +41,261 @@
             <!-- ================================================= -->
             <!-- STORAGE TAB (UNCHANGED – AS YOU REQUESTED)       -->
             <!-- ================================================= -->
+            <!-- ================================================= -->
+            <!-- STORAGE TAB                                      -->
+            <!-- ================================================= -->
             <div class="tab-pane fade show active" id="storage" role="tabpanel">
 
+                <!-- Header + filename -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="mb-0">Storage Health</h4>
                     <span class="text-muted small">
-                    File: {{ storage_file }}
-                </span>
+            File: {{ storage_file|default:"N/A" }}
+        </span>
                 </div>
                 <hr class="mt-2 mb-4">
 
                 {% if storage_file_exists %}
                     <div class="row g-4">
+
                         {% for s in storage_data %}
-                            <!-- ===== YOUR EXISTING STORAGE CODE ===== -->
-                            <!-- VNX / UNITY / 3PAR blocks exactly as you already have -->
-                            <!-- (Not repeated here to avoid changing anything) -->
+
+                            <!-- ============================ -->
+                            <!-- VNX STORAGE                   -->
+                            <!-- ============================ -->
+                            {% if s.type == "vnx" %}
+                                <div class="col-xl-4 col-lg-6 col-md-12">
+                                    <div class="card h-100 shadow-sm border-success">
+                                        <div class="card-header bg-success text-white">
+                                            <strong>{{ s.hostname }}</strong>
+                                            <span class="badge bg-dark float-end">VNX</span>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <h6>Storage Processors</h6>
+                                            <p>SPA: {{ s.spa_ip }} ({{ s.spa_status }})</p>
+                                            <p>SPB: {{ s.spb_ip }} ({{ s.spb_status }})</p>
+
+                                            <hr>
+
+                                            <h6>Disks</h6>
+                                            <p>Total: {{ s.total_disks }}</p>
+                                            <p>OK: {{ s.ok_disks }}</p>
+                                            <p>Failed: {{ s.failed_disks }}</p>
+                                            <p>Bound: {{ s.bound_disks }}</p>
+                                            <p>Unbound: {{ s.unbound_disks }}</p>
+
+                                            <hr>
+
+                                            <h6>Pools</h6>
+                                            <p>Total: {{ s.total_pools }}</p>
+                                            <p>OK: {{ s.ok_pools }}</p>
+                                            <p>Failed: {{ s.failed_pools }}</p>
+                                        </div>
+
+                                        <div class="card-footer text-center">
+                                            {% if s.failed_disks > 0 or s.failed_pools > 0 %}
+                                                <span class="badge bg-danger">Action Required</span>
+                                            {% else %}
+                                                <span class="badge bg-success">Healthy</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- ============================ -->
+                            <!-- UNITY STORAGE                 -->
+                            <!-- ============================ -->
+                            {% if s.type == "unity" %}
+                                <div class="col-xl-4 col-lg-6 col-md-12">
+                                    <div class="card h-100 shadow-sm
+                {% if s.not_ok_service_processors or s.not_ok_disks or s.not_ok_iomodules %}
+                    border-danger
+                {% else %}
+                    border-success
+                {% endif %}
+            ">
+                                        <div class="card-header
+                    {% if s.not_ok_service_processors or s.not_ok_disks or s.not_ok_iomodules %}
+                        bg-danger text-white
+                    {% else %}
+                        bg-success text-white
+                    {% endif %}
+                ">
+                                            <strong>{{ s.hostname }}</strong>
+                                            <span class="badge bg-dark float-end">UNITY</span>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <h6>Management</h6>
+                                            <p>IP: {{ s.host }}</p>
+
+                                            <hr>
+
+                                            <h6>CPU Utilization</h6>
+                                            <p>SPA: {{ s.cpu_utilization.spa }}%</p>
+                                            <p>SPB: {{ s.cpu_utilization.spb }}%</p>
+
+                                            <hr>
+
+                                            <h6>Service Processors</h6>
+                                            <p>Total: {{ s.total_service_processors }}</p>
+                                            <p>OK: {{ s.ok_service_processors }}</p>
+                                            <p>Not OK: {{ s.not_ok_service_processors }}</p>
+
+                                            <hr>
+
+                                            <h6>Disks</h6>
+                                            <p>Total: {{ s.total_disks }}</p>
+                                            <p>OK: {{ s.ok_disks }}</p>
+                                            <p>Not OK: {{ s.not_ok_disks }}</p>
+
+                                            <hr>
+
+                                            <h6>I/O Modules</h6>
+                                            <p>Total: {{ s.total_iomodules }}</p>
+                                            <p>OK: {{ s.ok_iomodules }}</p>
+                                            <p>Not OK: {{ s.not_ok_iomodules }}</p>
+                                        </div>
+
+                                        <div class="card-footer text-center">
+                                            {% if s.not_ok_service_processors or s.not_ok_disks or s.not_ok_iomodules %}
+                                                <span class="badge bg-danger">Action Required</span>
+                                            {% else %}
+                                                <span class="badge bg-success">Healthy</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- ============================ -->
+                            <!-- 3PAR STORAGE                  -->
+                            <!-- ============================ -->
+                            {% if s.type == "3par" %}
+                                <div class="col-xl-6 col-lg-12 col-md-12">
+                                    <div class="card h-100 shadow-sm
+                {% if s.critical_alerts or s.not_ok_nodes or s.not_ok_disks %}
+                    border-danger
+                {% elif s.major_alerts %}
+                    border-warning
+                {% else %}
+                    border-success
+                {% endif %}
+            ">
+                                        <div class="card-header
+                    {% if s.critical_alerts %}
+                        bg-danger text-white
+                    {% elif s.major_alerts %}
+                        bg-warning
+                    {% else %}
+                        bg-success text-white
+                    {% endif %}
+                ">
+                                            <strong>{{ s.hostname }}</strong>
+                                            <span class="badge bg-dark float-end">3PAR</span>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <h6>Management</h6>
+                                            <p>IP: {{ s.host }}</p>
+
+                                            <hr>
+
+                                            <h6>Nodes</h6>
+                                            <p>Total: {{ s.total_nodes }}</p>
+                                            <p>OK: {{ s.ok_nodes }}</p>
+                                            <p>Not OK: {{ s.not_ok_nodes }}</p>
+
+                                            <hr>
+
+                                            <h6>Disks</h6>
+                                            <p>Total: {{ s.total_disks }}</p>
+                                            <p>OK: {{ s.ok_disks }}</p>
+                                            <p>Not OK: {{ s.not_ok_disks }}</p>
+
+                                            <hr>
+
+                                            <h6>Alerts</h6>
+                                            <p>Total: {{ s.total_alerts }}</p>
+                                            <ul>
+                                                <li class="text-danger">Critical: {{ s.critical_alerts }}</li>
+                                                <li class="text-warning">Major: {{ s.major_alerts }}</li>
+                                                <li>Minor: {{ s.minor_alerts }}</li>
+                                                <li>Informational: {{ s.informational_alerts }}</li>
+                                            </ul>
+
+                                            <hr>
+
+                                            <h6>Disk Capacity</h6>
+                                            {% for tier, d in s.disk.items %}
+                                                <p>
+                                                    <strong>{{ tier }}</strong><br>
+                                                    Disks: {{ d.normal_count }}/{{ d.total_disks }}<br>
+                                                    Used: {{ d.used_gb }} GB |
+                                                    Free: {{ d.free_gb }} GB ({{ d.free_percent }}%)
+                                                </p>
+                                                <div class="progress mb-3">
+                                                    <div class="progress-bar
+                                {% if d.free_percent < 10 %}
+                                    bg-danger
+                                {% elif d.free_percent < 25 %}
+                                    bg-warning
+                                {% else %}
+                                    bg-success
+                                {% endif %}
+                            " style="width: {{ d.free_percent }}%"></div>
+                                                </div>
+                                            {% endfor %}
+
+                                            <hr>
+
+                                            <h6>CPU (per node)</h6>
+                                            <table class="table table-sm table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th>Node</th>
+                                                    <th>User</th>
+                                                    <th>Sys</th>
+                                                    <th>Idle</th>
+                                                    <th>Busy</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for node, cpu in s.cpu.items %}
+                                                    <tr>
+                                                        <td>{{ node }}</td>
+                                                        <td>{{ cpu.user }}</td>
+                                                        <td>{{ cpu.sys }}</td>
+                                                        <td>{{ cpu.idle }}</td>
+                                                        <td>{{ cpu.busy }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="card-footer text-center">
+                                            {% if s.critical_alerts or s.not_ok_nodes or s.not_ok_disks %}
+                                                <span class="badge bg-danger">Action Required</span>
+                                            {% elif s.major_alerts %}
+                                                <span class="badge bg-warning">Warning</span>
+                                            {% else %}
+                                                <span class="badge bg-success">Healthy</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
                         {% endfor %}
                     </div>
+
                 {% else %}
-                    <div class="alert alert-warning">{{ storage_error }}</div>
+                    <div class="alert alert-warning">
+                        Storage health file not loaded or not found.
+                    </div>
                 {% endif %}
             </div>
 
