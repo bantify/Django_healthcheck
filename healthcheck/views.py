@@ -1,6 +1,7 @@
 import json
 from datetime import datetime, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
@@ -29,7 +30,8 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
         # --------------------------------------------------
         # Use NON-timezone-aware current time (as requested)
         # --------------------------------------------------
-        now = datetime.now()
+        LOCAL_TZ = ZoneInfo("Asia/Dhaka")
+        now = datetime.now(tz=ZoneInfo("UTC")).astimezone(LOCAL_TZ)
         previous_hour = now - timedelta(hours=1)
 
         date_part = previous_hour.strftime("%Y-%m-%d")
