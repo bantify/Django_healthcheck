@@ -1,3 +1,5 @@
+import smtplib
+
 from django.conf import settings
 from django.contrib.auth.views import (LoginView, LogoutView,
                                        PasswordResetDoneView, PasswordResetConfirmView,
@@ -66,7 +68,7 @@ class CustomPasswordResetView(PasswordResetView):
             return redirect(self.success_url)
 
         except (SMTPException, socket.timeout, TimeoutError,
-                ConnectionRefusedError, OSError) as e:
+                ConnectionRefusedError, OSError, smtplib.SMTPRecipientsRefused) as e:
 
             messages.error(
                 self.request,
