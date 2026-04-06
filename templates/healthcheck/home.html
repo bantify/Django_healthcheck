@@ -2,217 +2,213 @@
 {% load static %}
 {% load custom_filters %}
 
-{% block title %}
-Health Check Dashboard
-{% endblock %}
+{% block title %}Health Check Dashboard{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
 
-    <!-- ========================= -->
-    <!-- Dashboard Header          -->
-    <!-- ========================= -->
+    <!-- ================= DASHBOARD TITLE ================= -->
     <h1 class="text-center mb-4">Health Check Dashboard</h1>
 
-    <!-- ===================================================== -->
-    <!-- STORAGE HEALTH SECTION                                  -->
-    <!-- ===================================================== -->
+    <!-- ================================================== -->
+    <!-- STORAGE HEALTH                                    -->
+    <!-- ================================================== -->
     <div class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="d-flex justify-content-between mb-2">
             <h2>Storage Health</h2>
-            <small class="text-muted">
-                File: {{ storage_file }}
-            </small>
+            <small class="text-muted">{{ storage_file }}</small>
         </div>
 
         {% if storage_file_exists %}
-            <div class="row g-4">
-                {% for s in storage_data %}
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+        <div class="row g-4">
+            {% for s in storage_data %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
 
-                    <div class="card h-100 shadow-sm
-                        {% if s.critical_alerts or s.not_ok_disks %}
-                            border-danger
-                        {% elif s.major_alerts or s.failed_disks %}
-                            border-warning
+                <div class="card h-100 shadow-sm
+                    {% if s.critical_alerts %}
+                        border-danger
+                    {% elif s.major_alerts %}
+                        border-warning
+                    {% else %}
+                        border-success
+                    {% endif %}
+                ">
+
+                    <div class="card-header d-flex justify-content-between
+                        {% if s.critical_alerts %}
+                            bg-danger text-white
+                        {% elif s.major_alerts %}
+                            bg-warning
                         {% else %}
-                            border-success
+                            bg-success text-white
                         {% endif %}
                     ">
+                        <strong>{{ s.hostname }}</strong>
+                        <span class="badge bg-dark">{{ s.type|upper }}</span>
+                    </div>
 
-                        <!-- Card Header -->
-                        <div class="card-header d-flex justify-content-between align-items-center
-                            {% if s.critical_alerts or s.not_ok_disks %}
-                                bg-danger text-white
-                            {% elif s.major_alerts or s.failed_disks %}
-                                bg-warning
+                    <div class="card-body">
+                        <!-- SAFE IP HANDLING -->
+                        <p class="mb-1">
+                            <strong>IP:</strong>
+                            {% if s.host %}
+                                {{ s.host }}
+                            {% elif s.spa_ip %}
+                                {{ s.spa_ip }}
                             {% else %}
-                                bg-success text-white
+                                -
                             {% endif %}
-                        ">
-                            <strong>{{ s.hostname }}</strong>
-                            <span class="badge bg-dark text-uppercase">
-                                {{ s.type }}
-                            </span>
-                        </div>
+                        </p>
 
-                        <!-- Card Body -->
-                        <div class="card-body">
-                            <p class="mb-1">
-                                <strong>IP:</strong>
-                                {{ s.host|default:s.spa_ip }}
-                            </p>
+                        <p class="mb-1">
+                            <strong>Disks:</strong>
+                            {{ s.ok_disks }} / {{ s.total_disks }}
+                        </p>
 
-                            <p class="mb-1">
-                                <strong>Disks:</strong>
-                                {{ s.ok_disks|default:"-" }} /
-                                {{ s.total_disks|default:"-" }}
-                            </p>
+                        {% if s.type == "vnx" %}
+                        <p class="mb-1"><strong>SPA / SPB:</strong>
+                            {{ s.spa_status }} / {{ s.spb_status }}
+                        </p>
+                        {% endif %}
 
-                            {% if s.total_alerts is not None %}
-                            <p class="mb-1">
-                                <strong>Alerts:</strong>
-                                {{ s.total_alerts }}
-                            </p>
-                            {% endif %}
+                        {% if s.cpu_utilization %}
+                        <p class="mb-1">
+                            <strong>CPU:</strong>
+                            SPA {{ s.cpu_utilization.spa }}% /
+                            SPB {{ s.cpu_utilization.spb }}%
+                        </p>
+                        {% endif %}
 
-                            {% if s.cpu %}
-                            <p class="mb-1">
-                                <strong>CPU Busy:</strong>
-                                {{ s.cpu.0.busy }}%
-                            </p>
-                            {% endif %}
-                        </div>
+                        {% if s.total_alerts is not None %}
+                        <p class="mb-1">
+                            <strong>Alerts:</strong> {{ s.total_alerts }}
+                        </p>
+                        {% endif %}
+                    </div>
 
-                        <!-- Card Footer -->
-                        <div class="card-footer text-center">
-                            {% if s.critical_alerts or s.not_ok_disks %}
-                                <span class="badge bg-danger">Critical</span>
-                            {% elif s.major_alerts or s.failed_disks %}
-                                <span class="badge bg-warning text-dark">Warning</span>
-                            {% else %}
-                                <span class="badge bg-success">Healthy</span>
-                            {% endif %}
-                        </div>
-
+                    <div class="card-footer text-center">
+                        {% if s.critical_alerts %}
+                            <span class="badge bg-danger">Critical</span>
+                        {% elif s.major_alerts %}
+                            <span class="badge bg-warning text-dark">Warning</span>
+                        {% else %}
+                            <span class="badge bg-success">Healthy</span>
+                        {% endif %}
                     </div>
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
+        </div>
         {% else %}
-            <div class="alert alert-warning">
-                {{ storage_error }}
-            </div>
+            <div class="alert alert-warning">{{ storage_error }}</div>
         {% endif %}
     </div>
 
-    <!-- ===================================================== -->
-    <!-- SWITCH HEALTH SECTION                                   -->
-    <!-- ===================================================== -->
+    <!-- ================================================== -->
+    <!-- SWITCH HEALTH                                     -->
+    <!-- ================================================== -->
     <div class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="d-flex justify-content-between mb-2">
             <h2>Switch Health</h2>
-            <small class="text-muted">
-                File: {{ switch_file }}
-            </small>
+            <small class="text-muted">{{ switch_file }}</small>
         </div>
 
         {% if switch_file_exists %}
-            <div class="row g-4">
-                {% for sw in switch_data %}
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+        <div class="row g-4">
+            {% for sw in switch_data %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
 
-                    <div class="card h-100 shadow-sm
+                <div class="card h-100 shadow-sm
+                    {% if sw.status != "reachable" %}
+                        border-danger
+                    {% else %}
+                        border-success
+                    {% endif %}
+                ">
+
+                    <div class="card-header d-flex justify-content-between
                         {% if sw.status != "reachable" %}
-                            border-danger
+                            bg-danger text-white
                         {% else %}
-                            border-success
+                            bg-success text-white
                         {% endif %}
                     ">
-
-                        <!-- Card Header -->
-                        <div class="card-header d-flex justify-content-between align-items-center
-                            {% if sw.status != "reachable" %}
-                                bg-danger text-white
-                            {% else %}
-                                bg-success text-white
-                            {% endif %}
-                        ">
-                            <strong>{{ sw.device_name }}</strong>
-                            <span class="badge bg-dark text-uppercase">
-                                {{ sw.vendor }}
-                            </span>
-                        </div>
-
-                        <!-- Card Body -->
-                        <div class="card-body">
-                            <p class="mb-1">
-                                <strong>IP:</strong> {{ sw.device_ip }}
-                            </p>
-
-                            <p class="mb-1">
-                                <strong>Status:</strong>
-                                {% if sw.status == "reachable" %}
-                                    <span class="text-success fw-bold">Reachable</span>
-                                {% else %}
-                                    <span class="text-danger fw-bold">Unreachable</span>
-                                {% endif %}
-                            </p>
-
-                            {% if sw.cpu.slot_1 %}
-                            <p class="mb-1">
-                                <strong>CPU:</strong>
-                                Slot‑1 {{ sw.cpu.slot_1 }}%,
-                                Slot‑2 {{ sw.cpu.slot_2 }}%
-                            </p>
-                            {% endif %}
-
-                            {% if sw.free_memory.slot_1 %}
-                            <p class="mb-1">
-                                <strong>Free Memory:</strong>
-                                {{ sw.free_memory.slot_1 }}% /
-                                {{ sw.free_memory.slot_2 }}%
-                            </p>
-                            {% endif %}
-
-                            {% if sw.fan %}
-                            <p class="mb-1">
-                                <strong>Fans:</strong>
-                                {{ sw.fan.normal }} / {{ sw.fan.total }}
-                            </p>
-                            {% endif %}
-
-                            {% if sw.power %}
-                            <p class="mb-1">
-                                <strong>Power:</strong>
-                                {{ sw.power.normal }} / {{ sw.power.total }}
-                            </p>
-                            {% endif %}
-
-                            {% if sw.error %}
-                            <p class="text-danger mb-0">
-                                <strong>Error:</strong> {{ sw.error }}
-                            </p>
-                            {% endif %}
-                        </div>
-
-                        <!-- Card Footer -->
-                        <div class="card-footer text-center">
-                            {% if sw.status != "reachable" %}
-                                <span class="badge bg-danger">Down</span>
-                            {% else %}
-                                <span class="badge bg-success">Healthy</span>
-                            {% endif %}
-                        </div>
-
+                        <strong>{{ sw.device_name }}</strong>
+                        <span class="badge bg-dark">{{ sw.vendor|upper }}</span>
                     </div>
+
+                    <div class="card-body">
+                        <p class="mb-1">
+                            <strong>IP:</strong> {{ sw.device_ip }}
+                        </p>
+
+                        <p class="mb-1">
+                            <strong>Status:</strong>
+                            {% if sw.status == "reachable" %}
+                                <span class="text-success fw-bold">Reachable</span>
+                            {% else %}
+                                <span class="text-danger fw-bold">Unreachable</span>
+                            {% endif %}
+                        </p>
+
+                        {% if sw.state %}
+                        <p class="mb-1"><strong>State:</strong> {{ sw.state }}</p>
+                        {% endif %}
+
+                        {% if sw.health %}
+                        <p class="mb-1"><strong>Health:</strong> {{ sw.health }}</p>
+                        {% endif %}
+
+                        {% if sw.cpu.slot_1 %}
+                        <p class="mb-1">
+                            <strong>CPU:</strong>
+                            {{ sw.cpu.slot_1 }}% / {{ sw.cpu.slot_2 }}%
+                        </p>
+                        {% endif %}
+
+                        {% if sw.free_memory.slot_1 %}
+                        <p class="mb-1">
+                            <strong>Free Memory:</strong>
+                            {{ sw.free_memory.slot_1 }}% /
+                            {{ sw.free_memory.slot_2 }}%
+                        </p>
+                        {% endif %}
+
+                        {% if sw.fan %}
+                        <p class="mb-1">
+                            <strong>Fans:</strong>
+                            {{ sw.fan.normal }} / {{ sw.fan.total }}
+                        </p>
+                        {% endif %}
+
+                        {% if sw.power %}
+                        <p class="mb-1">
+                            <strong>Power:</strong>
+                            {{ sw.power.normal }} / {{ sw.power.total }}
+                        </p>
+                        {% endif %}
+
+                        {% if sw.error %}
+                        <p class="text-danger">
+                            <strong>Error:</strong> {{ sw.error }}
+                        </p>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-footer text-center">
+                        {% if sw.status != "reachable" %}
+                            <span class="badge bg-danger">Down</span>
+                        {% else %}
+                            <span class="badge bg-success">Healthy</span>
+                        {% endif %}
+                    </div>
+
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
+        </div>
         {% else %}
-            <div class="alert alert-warning">
-                {{ switch_error }}
-            </div>
+            <div class="alert alert-warning">{{ switch_error }}</div>
         {% endif %}
     </div>
 
