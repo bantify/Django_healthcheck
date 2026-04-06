@@ -8,35 +8,6 @@
         <!-- ================= PAGE TITLE ================= -->
         <h1 class="text-center mb-3">Health Check Dashboard</h1>
 
-        <!-- ============ HOME PAGE FILE SUMMARY ============ -->
-        <div class="card mb-4 shadow-sm">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <strong>Storage File:</strong><br>
-                        <span class="text-muted">{{ storage_file|default:"Not loaded" }}</span>
-                        {% if not storage_file_exists %}
-                            <span class="badge bg-danger ms-2">Missing</span>
-                        {% endif %}
-                    </div>
-                    <div class="col-md-4">
-                        <strong>Switch File:</strong><br>
-                        <span class="text-muted">{{ switch_file|default:"Not loaded" }}</span>
-                        {% if not switch_file_exists %}
-                            <span class="badge bg-danger ms-2">Missing</span>
-                        {% endif %}
-                    </div>
-                    <div class="col-md-4">
-                        <strong>OneView File:</strong><br>
-                        <span class="text-muted">{{ oneview_file|default:"Not loaded" }}</span>
-                        {% if not oneview_file_exists %}
-                            <span class="badge bg-danger ms-2">Missing</span>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- ================= TAB NAV ================= -->
         <ul class="nav nav-tabs mb-4" role="tablist">
             <li class="nav-item">
@@ -131,32 +102,145 @@
                             {% endif %}
 
                             {% if s.type == "3par" %}
-                                <div class="col-xl-6 col-lg-12">
-                                    <div class="card h-100
-                        {% if s.critical_alerts %}border-danger{% elif s.major_alerts %}border-warning{% else %}border-success{% endif %}
-                    ">
+                                <div class="col-xl-6 col-lg-12 col-md-12">
+                                    <div class="card h-100 shadow-sm
+        {% if s.critical_alerts or s.not_ok_nodes or s.not_ok_disks %}
+            border-danger
+        {% elif s.major_alerts %}
+            border-warning
+        {% else %}
+            border-success
+        {% endif %}
+    ">
+
+                                        <!-- HEADER -->
                                         <div class="card-header
-                            {% if s.critical_alerts %}bg-danger{% elif s.major_alerts %}bg-warning{% else %}bg-success{% endif %}
-                            text-white">
-                                            {{ s.hostname }}
+            {% if s.critical_alerts %}
+                bg-danger text-white
+            {% elif s.major_alerts %}
+                bg-warning
+            {% else %}
+                bg-success text-white
+            {% endif %}
+        ">
+                                            <strong>{{ s.hostname }}</strong>
                                             <span class="badge bg-dark float-end">3PAR</span>
                                         </div>
+
                                         <div class="card-body">
+
+                                            <!-- Management -->
+                                            <h6>Management</h6>
                                             <p><strong>IP:</strong> {{ s.host }}</p>
-                                            <p><strong>Nodes:</strong> {{ s.ok_nodes }}/{{ s.total_nodes }}</p>
-                                            <p><strong>Disks:</strong> {{ s.ok_disks }}/{{ s.total_disks }}</p>
-                                            <p><strong>Alerts:</strong> {{ s.total_alerts }}</p>
-                                            <ul>
-                                                <li>Critical: {{ s.critical_alerts }}</li>
-                                                <li>Major: {{ s.major_alerts }}</li>
+
+                                            <hr>
+
+                                            <!-- Nodes -->
+                                            <h6>Nodes</h6>
+                                            <p><strong>Total:</strong> {{ s.total_nodes }}</p>
+                                            <p><strong>OK:</strong> {{ s.ok_nodes }}</p>
+                                            <p><strong>Not OK:</strong> {{ s.not_ok_nodes }}</p>
+
+                                            <hr>
+
+                                            <!-- Disks -->
+                                            <h6>Disks</h6>
+                                            <p><strong>Total:</strong> {{ s.total_disks }}</p>
+                                            <p><strong>OK:</strong> {{ s.ok_disks }}</p>
+                                            <p><strong>Not OK:</strong> {{ s.not_ok_disks }}</p>
+
+                                            <hr>
+
+                                            <!-- Alerts -->
+                                            <h6>Alerts</h6>
+                                            <p><strong>Total:</strong> {{ s.total_alerts }}</p>
+                                            <ul class="mb-2">
+                                                <li class="text-danger">Critical: {{ s.critical_alerts }}</li>
+                                                <li class="text-warning">Major: {{ s.major_alerts }}</li>
                                                 <li>Minor: {{ s.minor_alerts }}</li>
-                                                <li>Info: {{ s.informational_alerts }}</li>
+                                                <li>Informational: {{ s.informational_alerts }}</li>
                                             </ul>
+
+                                            <hr>
+
+                                            <!-- ✅ STORAGE UTILIZATION (DISK CAPACITY) -->
+                                            <h6>Disk Capacity</h6>
+                                            {% for tier, d in s.disk.items %}
+                                                <p class="mb-1">
+                                                    <strong>{{ tier }}</strong><br>
+                                                    Disks: {{ d.normal_count }}/{{ d.total_disks }}<br>
+                                                    Used: {{ d.used_gb }} GB |
+                                                    Free: {{ d.free_gb }} GB ({{ d.free_percent }}%)
+                                                </p>
+                                                <div class="progress mb-3">
+                                                    <div class="progress-bar
+                        {% if d.free_percent < 10 %}
+                            bg-danger
+                        {% elif d.free_percent < 25 %}
+                            bg-warning
+                        {% else %}
+                            bg-success
+                        {% endif %}
+                    " style="width: {{ d.free_percent }}%">
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+
+                                            <hr>
+
+                                            <!-- ✅ CPU PER NODE -->
+                                            <h6>CPU Utilization (per node)</h6>
+                                            <div class="table-responsive">
+                                                <table class="table table-sm table-bordered">
+                                                    <thead class="table-light">
+                                                    <tr>
+                                                        <th>Node</th>
+                                                        <th>User %</th>
+                                                        <th>Sys %</th>
+                                                        <th>Idle %</th>
+                                                        <th>Busy %</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for node, cpu in s.cpu.items %}
+                                                        <tr>
+                                                            <td>{{ node }}</td>
+                                                            <td>{{ cpu.user }}</td>
+                                                            <td>{{ cpu.sys }}</td>
+                                                            <td>{{ cpu.idle }}</td>
+                                                            <td class="
+                                {% if cpu.busy > 70 %}
+                                    text-danger
+                                {% elif cpu.busy > 40 %}
+                                    text-warning
+                                {% else %}
+                                    text-success
+                                {% endif %}
+                            ">
+                                                                {{ cpu.busy }}
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
                                         </div>
+
+                                        <!-- FOOTER -->
+                                        <div class="card-footer text-center">
+                                            {% if s.critical_alerts or s.not_ok_nodes or s.not_ok_disks %}
+                                                <span class="badge bg-danger">Action Required</span>
+                                            {% elif s.major_alerts %}
+                                                <span class="badge bg-warning">Warning</span>
+                                            {% else %}
+                                                <span class="badge bg-success">Healthy</span>
+                                            {% endif %}
+                                        </div>
+
                                     </div>
                                 </div>
                             {% endif %}
-
                         {% endfor %}
                     </div>
                 {% else %}
