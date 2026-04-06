@@ -589,6 +589,28 @@
                                                 <td>{{ ds.type }}</td>
                                                 <td>{{ ds.free_space_gb }}</td>
                                                 <td>{{ ds.capacity_gb }}</td>
+
+                                                <!-- ✅ FREE SPACE PROGRESS BAR -->
+                                                <td>
+                                                    <div class="progress" style="height: 16px;">
+                                                        <div class="progress-bar
+                {% if ds.free_percent < 10 %}
+                    bg-danger
+                {% elif ds.free_percent < 25 %}
+                    bg-warning
+                {% else %}
+                    bg-success
+                {% endif %}
+            "
+                                                             role="progressbar"
+                                                             style="width: {{ ds.free_percent }}%;"
+                                                             aria-valuenow="{{ ds.free_percent }}"
+                                                             aria-valuemin="0"
+                                                             aria-valuemax="100">
+                                                            {{ ds.free_percent }}%
+                                                        </div>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                         </tbody>
