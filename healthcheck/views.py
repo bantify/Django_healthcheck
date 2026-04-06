@@ -21,6 +21,7 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
     STORAGE_DIR = Path("/var/log/healthcheck/storage")
     SWITCH_DIR = Path("/var/log/healthcheck/switch")
     ONEVIEW_DIR = Path("/var/log/healthcheck/oneview")
+    F5_DIR = Path("/var/log/healthcheck/f5")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -102,5 +103,23 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
             context["oneview_error"] = "Invalid OneView JSON format."
         except Exception as e:
             context["oneview_error"] = str(e)
+
+        # ================= F5 =================
+        f5_file = f"f5_health_{date_part}_{hour_part}.json"
+        f5_path = self.F5_DIR / f5_file
+
+        context["f5_file"] = f5_file
+        context["f5_data"] = []
+        context["f5_file_exists"] = False
+        context["f5_error"] = None
+
+        try:
+            if f5_path.exists():
+                context["f5_data"] = json.loads(f5_path.read_text())
+                context["f5_file_exists"] = True
+            else:
+                context["f5_error"] = "F5 health file not found."
+        except Exception as e:
+            context["f5_error"] = str(e)
 
         return context
