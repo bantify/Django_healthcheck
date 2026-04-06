@@ -51,5 +51,5 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
 
         except Exception as e:
             context["storage_error"] = str(e)
-
+        print(context)
         return context
