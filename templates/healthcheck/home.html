@@ -7,269 +7,149 @@
 {% block content %}
 <div class="container-fluid">
 
-    <h1 class="text-center mb-4">Health Check Dashboard V1</h1>
+    <h1 class="text-center mb-4">Health Check Dashboard</h1>
 
     <!-- ======================= -->
-    <!-- TABS NAVIGATION         -->
+    <!-- TAB NAVIGATION          -->
     <!-- ======================= -->
-    <ul class="nav nav-tabs mb-4" id="healthTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active"
-                    id="storage-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#storage"
-                    type="button"
-                    role="tab">
-                Storage
-            </button>
+    <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#storage">Storage</button>
         </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link"
-                    id="switch-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#switch"
-                    type="button"
-                    role="tab">
-                Switch
-            </button>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#switch">Switch</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#oneview">OneView</button>
         </li>
     </ul>
 
-    <!-- ======================= -->
-    <!-- TABS CONTENT            -->
-    <!-- ======================= -->
-    <div class="tab-content" id="healthTabsContent">
+    <div class="tab-content">
 
         <!-- ================================================= -->
-        <!-- STORAGE TAB                                      -->
+        <!-- STORAGE TAB (UNCHANGED / WORKING)                -->
         <!-- ================================================= -->
-        <div class="tab-pane fade show active" id="storage" role="tabpanel">
-
-            {% if storage_file_exists %}
-            <div class="row g-4">
-                {% for s in storage_data %}
-
-                    <!-- =============== VNX =============== -->
-                    {% if s.type == "vnx" %}
-                    <div class="col-xl-4 col-lg-6 col-md-12">
-                        <div class="card h-100 shadow-sm border-success">
-                            <div class="card-header bg-success text-white">
-                                <strong>{{ s.hostname }}</strong>
-                                <span class="badge bg-dark float-end">VNX</span>
-                            </div>
-                            <div class="card-body">
-                                <p><strong>SPA IP:</strong> {{ s.spa_ip }}</p>
-                                <p><strong>SPB IP:</strong> {{ s.spb_ip }}</p>
-                                <p><strong>SPA Status:</strong> {{ s.spa_status }}</p>
-                                <p><strong>SPB Status:</strong> {{ s.spb_status }}</p>
-                                <hr>
-                                <p><strong>Total Disks:</strong> {{ s.total_disks }}</p>
-                                <p><strong>OK Disks:</strong> {{ s.ok_disks }}</p>
-                                <p><strong>Failed Disks:</strong> {{ s.failed_disks }}</p>
-                                <p><strong>Bound:</strong> {{ s.bound_disks }}</p>
-                                <p><strong>Unbound:</strong> {{ s.unbound_disks }}</p>
-                                <hr>
-                                <p><strong>Total Pools:</strong> {{ s.total_pools }}</p>
-                                <p><strong>OK Pools:</strong> {{ s.ok_pools }}</p>
-                                <p><strong>Failed Pools:</strong> {{ s.failed_pools }}</p>
-                            </div>
-                            <div class="card-footer text-center">
-                                <span class="badge bg-success">Healthy</span>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <!-- =============== UNITY =============== -->
-                    {% if s.type == "unity" %}
-                    <div class="col-xl-4 col-lg-6 col-md-12">
-                        <div class="card h-100 shadow-sm border-success">
-                            <div class="card-header bg-success text-white">
-                                <strong>{{ s.hostname }}</strong>
-                                <span class="badge bg-dark float-end">UNITY</span>
-                            </div>
-                            <div class="card-body">
-                                <p><strong>IP:</strong> {{ s.host }}</p>
-                                <hr>
-                                <p><strong>CPU SPA:</strong> {{ s.cpu_utilization.spa }}%</p>
-                                <p><strong>CPU SPB:</strong> {{ s.cpu_utilization.spb }}%</p>
-                                <hr>
-                                <p><strong>Service Processors:</strong>
-                                    {{ s.ok_service_processors }}/{{ s.total_service_processors }}
-                                </p>
-                                <p><strong>Disks:</strong>
-                                    {{ s.ok_disks }}/{{ s.total_disks }}
-                                </p>
-                                <p><strong>I/O Modules:</strong>
-                                    {{ s.ok_iomodules }}/{{ s.total_iomodules }}
-                                </p>
-                            </div>
-                            <div class="card-footer text-center">
-                                <span class="badge bg-success">Healthy</span>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <!-- =============== 3PAR =============== -->
-                    {% if s.type == "3par" %}
-                    <div class="col-xl-6 col-lg-12 col-md-12">
-                        <div class="card h-100 shadow-sm
-                            {% if s.critical_alerts %}
-                                border-danger
-                            {% elif s.major_alerts %}
-                                border-warning
-                            {% else %}
-                                border-success
-                            {% endif %}
-                        ">
-                            <div class="card-header
-                                {% if s.critical_alerts %}
-                                    bg-danger text-white
-                                {% elif s.major_alerts %}
-                                    bg-warning
-                                {% else %}
-                                    bg-success text-white
-                                {% endif %}
-                            ">
-                                <strong>{{ s.hostname }}</strong>
-                                <span class="badge bg-dark float-end">3PAR</span>
-                            </div>
-                            <div class="card-body">
-                                <p><strong>IP:</strong> {{ s.host }}</p>
-                                <hr>
-                                <p><strong>Nodes:</strong>
-                                    {{ s.ok_nodes }}/{{ s.total_nodes }}
-                                </p>
-                                <p><strong>Disks:</strong>
-                                    {{ s.ok_disks }}/{{ s.total_disks }}
-                                </p>
-
-                                <hr>
-
-                                <p><strong>Total Alerts:</strong> {{ s.total_alerts }}</p>
-                                <ul>
-                                    <li class="text-danger">Critical: {{ s.critical_alerts }}</li>
-                                    <li class="text-warning">Major: {{ s.major_alerts }}</li>
-                                    <li>Minor: {{ s.minor_alerts }}</li>
-                                    <li>Info: {{ s.informational_alerts }}</li>
-                                </ul>
-                            </div>
-                            <div class="card-footer text-center">
-                                {% if s.critical_alerts %}
-                                    <span class="badge bg-danger">Action Required</span>
-                                {% elif s.major_alerts %}
-                                    <span class="badge bg-warning">Warning</span>
-                                {% else %}
-                                    <span class="badge bg-success">Healthy</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                {% endfor %}
-            </div>
-            {% else %}
-                <div class="alert alert-warning">{{ storage_error }}</div>
-            {% endif %}
+        <div class="tab-pane fade show active" id="storage">
+            {% include "healthcheck/partials/storage_cards.html" %}
         </div>
 
         <!-- ================================================= -->
-        <!-- SWITCH TAB                                       -->
+        <!-- SWITCH TAB (UNCHANGED / WORKING)                 -->
         <!-- ================================================= -->
-        <div class="tab-pane fade" id="switch" role="tabpanel">
+        <div class="tab-pane fade" id="switch">
+            {% include "healthcheck/partials/switch_cards.html" %}
+        </div>
 
-            {% if switch_file_exists %}
-            <div class="row g-4">
-                {% for sw in switch_data %}
-                <div class="col-xl-3 col-lg-4 col-md-6">
+        <!-- ================================================= -->
+        <!-- ONEVIEW TAB                                      -->
+        <!-- ================================================= -->
+        <div class="tab-pane fade" id="oneview">
 
-                    <div class="card h-100 shadow-sm
-                        {% if sw.status != "reachable" %}
-                            border-danger
-                        {% else %}
-                            border-success
-                        {% endif %}
-                    ">
-                        <div class="card-header
-                            {% if sw.status != "reachable" %}
-                                bg-danger text-white
-                            {% else %}
-                                bg-success text-white
-                            {% endif %}
-                        ">
-                            <strong>{{ sw.device_name }}</strong>
-                            <span class="badge bg-dark float-end">{{ sw.vendor|upper }}</span>
-                        </div>
+            {% if oneview_file_exists %}
 
-                        <div class="card-body">
-                            <p><strong>IP:</strong> {{ sw.device_ip }}</p>
-
-                            <p>
-                                <strong>Status:</strong>
-                                {% if sw.status == "reachable" %}
-                                    <span class="text-success">Reachable</span>
-                                {% else %}
-                                    <span class="text-danger">Unreachable</span>
-                                {% endif %}
-                            </p>
-
-                            {% if sw.state %}
-                            <p><strong>State:</strong> {{ sw.state }}</p>
-                            {% endif %}
-
-                            {% if sw.health %}
-                            <p><strong>Health:</strong> {{ sw.health }}</p>
-                            {% endif %}
-
-                            {% if sw.cpu and sw.cpu.slot_1 %}
-                            <p><strong>CPU:</strong>
-                                {{ sw.cpu.slot_1 }}% / {{ sw.cpu.slot_2 }}%
-                            </p>
-                            {% endif %}
-
-                            {% if sw.free_memory and sw.free_memory.slot_1 %}
-                            <p><strong>Free Memory:</strong>
-                                {{ sw.free_memory.slot_1 }}% /
-                                {{ sw.free_memory.slot_2 }}%
-                            </p>
-                            {% endif %}
-
-                            {% if sw.fan %}
-                            <p><strong>Fans:</strong>
-                                {{ sw.fan.normal }}/{{ sw.fan.total }}
-                            </p>
-                            {% endif %}
-
-                            {% if sw.power %}
-                            <p><strong>Power:</strong>
-                                {{ sw.power.normal }}/{{ sw.power.total }}
-                            </p>
-                            {% endif %}
-
-                            {% if sw.error %}
-                            <p class="text-danger">{{ sw.error }}</p>
-                            {% endif %}
-                        </div>
-
-                        <div class="card-footer text-center">
-                            {% if sw.status == "reachable" %}
-                                <span class="badge bg-success">Healthy</span>
-                            {% else %}
-                                <span class="badge bg-danger">Down</span>
-                            {% endif %}
-                        </div>
-
-                    </div>
+            {% for ov in oneview_data %}
+            <div class="card mb-4 shadow-sm
+                {% if ov.enclosures_summary.Not_OK > 0 or ov.servers_summary.Not_OK > 0 %}
+                    border-danger
+                {% else %}
+                    border-success
+                {% endif %}
+            ">
+                <div class="card-header
+                    {% if ov.enclosures_summary.Not_OK > 0 or ov.servers_summary.Not_OK > 0 %}
+                        bg-danger text-white
+                    {% else %}
+                        bg-success text-white
+                    {% endif %}
+                ">
+                    <strong>{{ ov.oneview_name }}</strong>
+                    <span class="float-end">IP: {{ ov.oneview_ip }}</span>
                 </div>
-                {% endfor %}
+
+                <div class="card-body">
+
+                    <!-- =================== -->
+                    <!-- ENCLOSURES SUMMARY  -->
+                    <!-- =================== -->
+                    <h5>Enclosures Summary</h5>
+                    <p>
+                        Total: {{ ov.enclosures_summary.total }} |
+                        OK: {{ ov.enclosures_summary.OK }} |
+                        Not OK: {{ ov.enclosures_summary.Not_OK }}
+                    </p>
+
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Serial</th>
+                                <th>Status</th>
+                                <th>State</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enc in ov.enclosures %}
+                            <tr class="{% if enc.status != 'OK' %}table-danger{% endif %}">
+                                <td>{{ enc.name }}</td>
+                                <td>{{ enc.serialNumber }}</td>
+                                <td>{{ enc.status }}</td>
+                                <td>{{ enc.state }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <hr>
+
+                    <!-- =================== -->
+                    <!-- SERVERS SUMMARY     -->
+                    <!-- =================== -->
+                    <h5>Servers Summary</h5>
+                    <p>
+                        Total: {{ ov.servers_summary.total }} |
+                        OK: {{ ov.servers_summary.OK }} |
+                        Not OK: {{ ov.servers_summary.Not_OK }}
+                    </p>
+
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Serial</th>
+                                    <th>Power</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for srv in ov.servers %}
+                                <tr class="{% if srv.status != 'OK' %}table-danger{% endif %}">
+                                    <td>{{ srv.name }}</td>
+                                    <td>{{ srv.serialNumber }}</td>
+                                    <td>{{ srv.powerState }}</td>
+                                    <td>{{ srv.status }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="card-footer text-center">
+                    {% if ov.enclosures_summary.Not_OK > 0 or ov.servers_summary.Not_OK > 0 %}
+                        <span class="badge bg-danger">Action Required</span>
+                    {% else %}
+                        <span class="badge bg-success">Healthy</span>
+                    {% endif %}
+                </div>
             </div>
+            {% endfor %}
+
             {% else %}
-                <div class="alert alert-warning">{{ switch_error }}</div>
+            <div class="alert alert-warning">{{ oneview_error }}</div>
             {% endif %}
         </div>
-
     </div>
 </div>
 {% endblock %}
