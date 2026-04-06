@@ -1,8 +1,8 @@
 import json
-from datetime import timedelta
+from datetime import timedelta,datetime
 from pathlib import Path
 
-from django.utils import timezone
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
@@ -11,13 +11,13 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
     template_name = "healthcheck/home.html"
 
     STORAGE_DIR = Path("/var/log/healthcheck/storage")
-    SWITCH_DIR = Path("/home/infraadmin/healthcheck")
+    SWITCH_DIR = Path("/var/log/healthcheck/switch")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         # Current time (timezone-aware)
-        now = timezone.now()
+        now = datetime.now()
 
         # Previous hour
         previous_hour_time = now - timedelta(hours=1)
