@@ -20,7 +20,7 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
     # Base directories
     STORAGE_DIR = Path("/var/log/healthcheck/storage")
     SWITCH_DIR = Path("/var/log/healthcheck/switch")
-    ONEVIEW_DIR = Path("var/log/healthcheck/oneview")
+    ONEVIEW_DIR = Path("/var/log/healthcheck/oneview")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
