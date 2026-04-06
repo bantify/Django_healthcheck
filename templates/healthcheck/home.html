@@ -7,14 +7,86 @@ Health Check Dashboard
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container-fluid">
 
     <h1 class="text-center mb-4">Health Check Dashboard</h1>
 
-    <div class="alert alert-info text-center">
-        System health status will appear here.
-        {{ storage_data }}
-    </div>
+    <div class="row g-4">
 
+        {% for s in storage_data %}
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+
+            <div class="card h-100 shadow-sm
+                {% if s.critical_alerts or s.not_ok_disks %}
+                    border-danger
+                {% elif s.major_alerts or s.failed_disks %}
+                    border-warning
+                {% else %}
+                    border-success
+                {% endif %}
+            ">
+
+                <!-- Card Header -->
+                <div class="card-header d-flex justify-content-between align-items-center
+                    {% if s.critical_alerts or s.not_ok_disks %}
+                        bg-danger text-white
+                    {% elif s.major_alerts or s.failed_disks %}
+                        bg-warning
+                    {% else %}
+                        bg-success text-white
+                    {% endif %}
+                ">
+                    <strong>{{ s.hostname }}</strong>
+                    <span class="badge bg-dark text-uppercase">
+                        {{ s.type }}
+                    </span>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body">
+                    <p class="mb-1">
+                        <strong>IP:</strong>
+                        {{ s.host|default:s.spa_ip }}
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Disks:</strong>
+                        {{ s.ok_disks|default:"-" }}
+                        /
+                        {{ s.total_disks|default:"-" }}
+                    </p>
+
+                    {% if s.total_alerts is not None %}
+                    <p class="mb-1">
+                        <strong>Alerts:</strong>
+                        {{ s.total_alerts }}
+                    </p>
+                    {% endif %}
+
+                    {% if s.cpu %}
+                    <p class="mb-1">
+                        <strong>CPU Busy (Node‑0):</strong>
+                        {{ s.cpu.0.busy }}%
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Card Footer -->
+                <div class="card-footer text-center">
+                    {% if s.critical_alerts or s.not_ok_disks %}
+                        <span class="badge bg-danger">Critical</span>
+                    {% elif s.major_alerts or s.failed_disks %}
+                        <span class="badge bg-warning text-dark">Warning</span>
+                    {% else %}
+                        <span class="badge bg-success">Healthy</span>
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
 </div>
 {% endblock %}
