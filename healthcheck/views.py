@@ -138,6 +138,15 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
             if f5_path.exists():
                 context["vcenter_data"] = json.loads(f5_path.read_text())
                 context["vcenter_file_exists"] = True
+            for vc in context["vcenter_data"]:
+                for ds in vc["datastores_info"]["datastores"]:
+                    if ds["capacity_gb"] > 0:
+                        ds["free_percent"] = round(
+                            (ds["free_space_gb"] / ds["capacity_gb"]) * 100,
+                            2
+                        )
+                    else:
+                        ds["free_percent"] = 0
             else:
                 context["vcenter_error"] = "Vcenter health file not found."
         except Exception as e:

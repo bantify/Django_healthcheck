@@ -577,10 +577,17 @@
                                         </thead>
                                         <tbody>
                                         {% for ds in vc.datastores_info.datastores %}
+{#                                            <tr#}
+{#                                                    {% if ds.free_space_gb < (ds.capacity_gb * 0.1) %}#}
+{#                                                        class="table-danger"#}
+{#                                                    {% elif ds.free_space_gb < (ds.capacity_gb * 0.25) %}#}
+{#                                                        class="table-warning"#}
+{#                                                    {% endif %}#}
+{#                                            >#}
                                             <tr
-                                                    {% if ds.free_space_gb < (ds.capacity_gb * 0.1) %}
+                                                    {% if ds.free_percent < 10 %}
                                                         class="table-danger"
-                                                    {% elif ds.free_space_gb < (ds.capacity_gb * 0.25) %}
+                                                    {% elif ds.free_percent < 25 %}
                                                         class="table-warning"
                                                     {% endif %}
                                             >
