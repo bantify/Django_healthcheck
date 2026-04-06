@@ -23,6 +23,7 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
     SWITCH_DIR = Path("/var/log/healthcheck/switch")
     ONEVIEW_DIR = Path("/var/log/healthcheck/oneview")
     F5_DIR = Path("/var/log/healthcheck/f5")
+    VCENTER_DIR = Path("/var/log/healthcheck/vcenter")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -123,5 +124,23 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
                 context["f5_error"] = "F5 health file not found."
         except Exception as e:
             context["f5_error"] = str(e)
+
+        # ================= vcenter =================
+        vcenter_file = f"vcenter_health_{date_part}_{hour_part}.json"
+        vcenter_path = self.VCENTER_DIR / vcenter_file
+
+        context["vcenter_file"] = f5_file
+        context["vcenter_data"] = []
+        context["vcenter_file_exists"] = False
+        context["vcenter_error"] = None
+
+        try:
+            if f5_path.exists():
+                context["vcenter_data"] = json.loads(f5_path.read_text())
+                context["vcenter_file_exists"] = True
+            else:
+                context["vcenter_error"] = "Vcenter health file not found."
+        except Exception as e:
+            context["vcenter_error"] = str(e)
 
         return context

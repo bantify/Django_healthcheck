@@ -33,6 +33,14 @@
                     F5
                 </button>
             </li>
+            <li class="nav-item">
+                <button class="nav-link"
+                        data-bs-toggle="tab"
+                        data-bs-target="#vcenter"
+                        type="button">
+                    vCenter
+                </button>
+            </li>
         </ul>
 
         <div class="tab-content">
@@ -472,6 +480,128 @@
                     <div class="alert alert-warning">
                         F5 health file not loaded or not found.
                         {% if f5_error %}<br>{{ f5_error }}{% endif %}
+                    </div>
+                {% endif %}
+
+            </div>
+            <!-- ================================================= -->
+            <!-- VCENTER TAB                                      -->
+            <!-- ================================================= -->
+            <div class="tab-pane fade" id="vcenter" role="tabpanel">
+
+                <!-- Header -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">vCenter Health</h4>
+                    <span class="text-muted small">
+            File: {{ vcenter_file|default:"N/A" }}
+        </span>
+                </div>
+                <hr class="mt-2 mb-4">
+
+                {% if vcenter_file_exists %}
+
+                    {% for vc in vcenter_data %}
+                        <div class="card mb-4 shadow-sm border-success">
+
+                            <!-- VCENTER HEADER -->
+                            <div class="card-header bg-success text-white">
+                                <strong>{{ vc.name }}</strong>
+                                <span class="float-end">{{ vc.vcenter }}</span>
+                            </div>
+
+                            <div class="card-body">
+
+                                <!-- ================= VM SUMMARY ================= -->
+                                <h6>Virtual Machines</h6>
+                                <p>
+                                    <strong>Total:</strong> {{ vc.vms_info.summary.total }} |
+                                    <span class="text-success">
+                        ON: {{ vc.vms_info.summary.powered_on }}
+                    </span> |
+                                    <span class="text-muted">
+                        OFF: {{ vc.vms_info.summary.powered_off }}
+                    </span>
+                                </p>
+
+                                <!-- VM TABLE -->
+                                <div class="table-responsive mb-4">
+                                    <table class="table table-sm table-bordered">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Power State</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for vm in vc.vms_info.vms %}
+                                            <tr class="{% if vm.power_state != 'POWERED_ON' %}table-warning{% endif %}">
+                                                <td>{{ vm.id }}</td>
+                                                <td>{{ vm.name }}</td>
+                                                <td>
+                                                    {% if vm.power_state == 'POWERED_ON' %}
+                                                        <span class="text-success">ON</span>
+                                                    {% else %}
+                                                        <span class="text-danger">OFF</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <hr>
+
+                                <!-- ================= DATASTORE SUMMARY ================= -->
+                                <h6>Datastores</h6>
+                                <p>
+                                    <strong>Total:</strong> {{ vc.datastores_info.summary.total }}<br>
+                                    <strong>Capacity:</strong>
+                                    {{ vc.datastores_info.summary.total_capacity_gb }} GB |
+                                    <strong>Free:</strong>
+                                    {{ vc.datastores_info.summary.total_free_space_gb }} GB
+                                </p>
+
+                                <!-- DATASTORE TABLE -->
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-bordered">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Free (GB)</th>
+                                            <th>Capacity (GB)</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for ds in vc.datastores_info.datastores %}
+                                            <tr
+                                                    {% if ds.free_space_gb < (ds.capacity_gb * 0.1) %}
+                                                        class="table-danger"
+                                                    {% elif ds.free_space_gb < (ds.capacity_gb * 0.25) %}
+                                                        class="table-warning"
+                                                    {% endif %}
+                                            >
+                                                <td>{{ ds.id }}</td>
+                                                <td>{{ ds.name }}</td>
+                                                <td>{{ ds.type }}</td>
+                                                <td>{{ ds.free_space_gb }}</td>
+                                                <td>{{ ds.capacity_gb }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                {% else %}
+                    <div class="alert alert-warning">
+                        vCenter health file not loaded or not found.
                     </div>
                 {% endif %}
 
