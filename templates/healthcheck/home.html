@@ -9,10 +9,17 @@ Health Check Dashboard
 {% block content %}
 <div class="container-fluid">
 
+    <!-- ========================= -->
+    <!-- Dashboard Title           -->
+    <!-- ========================= -->
     <h1 class="text-center mb-4">Health Check Dashboard</h1>
 
-    <div class="row g-4">
+    <!-- ========================= -->
+    <!-- STORAGE HEALTH SECTION    -->
+    <!-- ========================= -->
+    <h2 class="mb-3">Storage Health</h2>
 
+    <div class="row g-4">
         {% for s in storage_data %}
         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
 
@@ -65,7 +72,7 @@ Health Check Dashboard
 
                     {% if s.cpu %}
                     <p class="mb-1">
-                        <strong>CPU Busy (Node‑0):</strong>
+                        <strong>CPU Busy:</strong>
                         {{ s.cpu.0.busy }}%
                     </p>
                     {% endif %}
@@ -83,10 +90,108 @@ Health Check Dashboard
                 </div>
 
             </div>
-
         </div>
         {% endfor %}
-
     </div>
+
+    <!-- ========================= -->
+    <!-- SWITCH HEALTH SECTION     -->
+    <!-- ========================= -->
+    <hr class="my-5">
+
+    <h2 class="mb-3">Switch Health</h2>
+
+    <div class="row g-4">
+        {% for sw in switch_data %}
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+
+            <div class="card h-100 shadow-sm
+                {% if sw.status != "reachable" %}
+                    border-danger
+                {% else %}
+                    border-success
+                {% endif %}
+            ">
+
+                <!-- Card Header -->
+                <div class="card-header d-flex justify-content-between align-items-center
+                    {% if sw.status != "reachable" %}
+                        bg-danger text-white
+                    {% else %}
+                        bg-success text-white
+                    {% endif %}
+                ">
+                    <strong>{{ sw.device_name }}</strong>
+                    <span class="badge bg-dark text-uppercase">
+                        {{ sw.vendor }}
+                    </span>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body">
+                    <p class="mb-1">
+                        <strong>IP:</strong> {{ sw.device_ip }}
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Status:</strong>
+                        {% if sw.status == "reachable" %}
+                            <span class="text-success fw-bold">Reachable</span>
+                        {% else %}
+                            <span class="text-danger fw-bold">Unreachable</span>
+                        {% endif %}
+                    </p>
+
+                    {% if sw.cpu.slot_1 %}
+                    <p class="mb-1">
+                        <strong>CPU:</strong>
+                        Slot‑1 {{ sw.cpu.slot_1 }}%,
+                        Slot‑2 {{ sw.cpu.slot_2 }}%
+                    </p>
+                    {% endif %}
+
+                    {% if sw.free_memory.slot_1 %}
+                    <p class="mb-1">
+                        <strong>Free Memory:</strong>
+                        {{ sw.free_memory.slot_1 }}% /
+                        {{ sw.free_memory.slot_2 }}%
+                    </p>
+                    {% endif %}
+
+                    {% if sw.fan %}
+                    <p class="mb-1">
+                        <strong>Fans:</strong>
+                        {{ sw.fan.normal }} / {{ sw.fan.total }}
+                    </p>
+                    {% endif %}
+
+                    {% if sw.power %}
+                    <p class="mb-1">
+                        <strong>Power:</strong>
+                        {{ sw.power.normal }} / {{ sw.power.total }}
+                    </p>
+                    {% endif %}
+
+                    {% if sw.error %}
+                    <p class="text-danger mb-0">
+                        <strong>Error:</strong> {{ sw.error }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Card Footer -->
+                <div class="card-footer text-center">
+                    {% if sw.status != "reachable" %}
+                        <span class="badge bg-danger">Down</span>
+                    {% else %}
+                        <span class="badge bg-success">Healthy</span>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
 </div>
 {% endblock %}
