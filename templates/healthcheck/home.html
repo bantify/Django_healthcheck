@@ -3,229 +3,212 @@
 {% block title %}Health Check Dashboard{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
+    <div class="container-fluid">
 
-    <h1 class="text-center mb-4">Health Check Dashboard</h1>
+        <h1 class="text-center mb-4">Health Check Dashboard</h1>
 
-    <!-- ================= TAB NAV ================= -->
-    <ul class="nav nav-tabs mb-4" role="tablist">
-        <li class="nav-item">
-            <button class="nav-link active"
-                    data-bs-toggle="tab"
-                    data-bs-target="#storage"
-                    type="button">
-                Storage
-            </button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link"
-                    data-bs-toggle="tab"
-                    data-bs-target="#switch"
-                    type="button">
-                Switch
-            </button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link"
-                    data-bs-toggle="tab"
-                    data-bs-target="#oneview"
-                    type="button">
-                OneView
-            </button>
-        </li>
-    </ul>
+        <!-- ================= TAB NAV ================= -->
+        <ul class="nav nav-tabs mb-4" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active"
+                        data-bs-toggle="tab"
+                        data-bs-target="#storage"
+                        type="button">
+                    Storage
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link"
+                        data-bs-toggle="tab"
+                        data-bs-target="#switch"
+                        type="button">
+                    Switch
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link"
+                        data-bs-toggle="tab"
+                        data-bs-target="#oneview"
+                        type="button">
+                    OneView
+                </button>
+            </li>
+        </ul>
 
-    <!-- ================= TAB CONTENT ================= -->
-    <div class="tab-content">
+        <!-- ================= TAB CONTENT ================= -->
+        <div class="tab-content">
 
-        <!-- ================================================= -->
-        <!-- STORAGE TAB (UNCHANGED – AS YOU REQUESTED)       -->
-        <!-- ================================================= -->
-        <div class="tab-pane fade show active" id="storage" role="tabpanel">
+            <!-- ================================================= -->
+            <!-- STORAGE TAB (UNCHANGED – AS YOU REQUESTED)       -->
+            <!-- ================================================= -->
+            <div class="tab-pane fade show active" id="storage" role="tabpanel">
 
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="mb-0">Storage Health</h4>
-                <span class="text-muted small">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">Storage Health</h4>
+                    <span class="text-muted small">
                     File: {{ storage_file }}
                 </span>
-            </div>
-            <hr class="mt-2 mb-4">
-
-            {% if storage_file_exists %}
-            <div class="row g-4">
-                {% for s in storage_data %}
-                    <!-- ===== YOUR EXISTING STORAGE CODE ===== -->
-                    <!-- VNX / UNITY / 3PAR blocks exactly as you already have -->
-                    <!-- (Not repeated here to avoid changing anything) -->
-                {% endfor %}
-            </div>
-            {% else %}
-                <div class="alert alert-warning">{{ storage_error }}</div>
-            {% endif %}
-        </div>
-
-        <!-- ================================================= -->
-        <!-- SWITCH TAB                                       -->
-        <!-- ================================================= -->
-        <div class="tab-pane fade" id="switch" role="tabpanel">
-
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="mb-0">Switch Health</h4>
-                <span class="text-muted small">
-                    File: {{ switch_file }}
-                </span>
-            </div>
-            <hr class="mt-2 mb-4">
-
-            {% if switch_file_exists %}
-            <div class="row g-4">
-                {% for sw in switch_data %}
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="card h-100 shadow-sm
-                        {% if sw.status != 'reachable' %}
-                            border-danger
-                        {% else %}
-                            border-success
-                        {% endif %}
-                    ">
-                        <div class="card-header
-                            {% if sw.status != 'reachable' %}
-                                bg-danger text-white
-                            {% else %}
-                                bg-success text-white
-                            {% endif %}
-                        ">
-                            <strong>{{ sw.device_name }}</strong>
-                            <span class="badge bg-dark float-end">{{ sw.vendor|upper }}</span>
-                        </div>
-
-                        <div class="card-body">
-                            <p><strong>IP:</strong> {{ sw.device_ip }}</p>
-                            <p>
-                                <strong>Status:</strong>
-                                {% if sw.status == "reachable" %}
-                                    <span class="text-success">Reachable</span>
-                                {% else %}
-                                    <span class="text-danger">Unreachable</span>
-                                {% endif %}
-                            </p>
-
-                            {% if sw.state %}<p><strong>State:</strong> {{ sw.state }}</p>{% endif %}
-                            {% if sw.health %}<p><strong>Health:</strong> {{ sw.health }}</p>{% endif %}
-
-                            {% if sw.cpu and sw.cpu.slot_1 %}
-                                <p><strong>CPU:</strong> {{ sw.cpu.slot_1 }}% / {{ sw.cpu.slot_2 }}%</p>
-                            {% endif %}
-
-                            {% if sw.free_memory and sw.free_memory.slot_1 %}
-                                <p><strong>Free Memory:</strong>
-                                    {{ sw.free_memory.slot_1 }}% /
-                                    {{ sw.free_memory.slot_2 }}%
-                                </p>
-                            {% endif %}
-
-                            {% if sw.fan %}
-                                <p><strong>Fans:</strong> {{ sw.fan.normal }}/{{ sw.fan.total }}</p>
-                            {% endif %}
-
-                            {% if sw.power %}
-                                <p><strong>Power:</strong> {{ sw.power.normal }}/{{ sw.power.total }}</p>
-                            {% endif %}
-
-                            {% if sw.error %}
-                                <p class="text-danger"><strong>Error:</strong> {{ sw.error }}</p>
-                            {% endif %}
-                        </div>
-
-                        <div class="card-footer text-center">
-                            {% if sw.status == "reachable" %}
-                                <span class="badge bg-success">Healthy</span>
-                            {% else %}
-                                <span class="badge bg-danger">Down</span>
-                            {% endif %}
-                        </div>
-                    </div>
                 </div>
-                {% endfor %}
-            </div>
-            {% else %}
-                <div class="alert alert-warning">{{ switch_error }}</div>
-            {% endif %}
-        </div>
+                <hr class="mt-2 mb-4">
 
-        <!-- ================================================= -->
-        <!-- ONEVIEW TAB                                      -->
-        <!-- ================================================= -->
-        <div class="tab-pane fade" id="oneview" role="tabpanel">
-
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="mb-0">OneView Health</h4>
-                <span class="text-muted small">
-                    File: {{ oneview_file }}
-                </span>
-            </div>
-            <hr class="mt-2 mb-4">
-
-            {% if oneview_file_exists %}
-            {% for ov in oneview_data %}
-            <div class="card mb-4 shadow-sm
-                {% if ov.enclosures_summary.Not_OK or ov.servers_summary.Not_OK %}
-                    border-danger
+                {% if storage_file_exists %}
+                    <div class="row g-4">
+                        {% for s in storage_data %}
+                            <!-- ===== YOUR EXISTING STORAGE CODE ===== -->
+                            <!-- VNX / UNITY / 3PAR blocks exactly as you already have -->
+                            <!-- (Not repeated here to avoid changing anything) -->
+                        {% endfor %}
+                    </div>
                 {% else %}
-                    border-success
+                    <div class="alert alert-warning">{{ storage_error }}</div>
                 {% endif %}
-            ">
-                <div class="card-header
-                    {% if ov.enclosures_summary.Not_OK or ov.servers_summary.Not_OK %}
-                        bg-danger text-white
+            </div>
+
+            <!-- ================================================= -->
+            <!-- SWITCH TAB                                       -->
+            <!-- ================================================= -->
+            <div class="tab-pane fade" id="switch" role="tabpanel">
+
+                <!-- Header ALWAYS visible -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">Switch Health</h4>
+                    <span class="text-muted small">
+            File: {{ switch_file|default:"N/A" }}
+        </span>
+                </div>
+                <hr class="mt-2 mb-4">
+
+                {% if switch_file_exists %}
+
+                    <div class="row g-4">
+                        {% for sw in switch_data %}
+                            <div class="col-xl-3 col-lg-4 col-md-6">
+
+                                <div class="card h-100 shadow-sm
+                    {% if sw.status != 'reachable' %}
+                        border-danger
                     {% else %}
-                        bg-success text-white
+                        border-success
                     {% endif %}
                 ">
-                    <strong>{{ ov.oneview_name }}</strong>
-                    <span class="float-end">IP: {{ ov.oneview_ip }}</span>
-                </div>
+                                    <div class="card-header
+                        {% if sw.status != 'reachable' %}
+                            bg-danger text-white
+                        {% else %}
+                            bg-success text-white
+                        {% endif %}
+                    ">
+                                        <strong>{{ sw.device_name }}</strong>
+                                        <span class="badge bg-dark float-end">{{ sw.vendor|upper }}</span>
+                                    </div>
 
-                <div class="card-body">
-                    <h6>Enclosures ({{ ov.enclosures_summary.OK }}/{{ ov.enclosures_summary.total }})</h6>
-                    <table class="table table-sm table-bordered">
-                        <tr><th>Name</th><th>Status</th><th>State</th></tr>
-                        {% for e in ov.enclosures %}
-                        <tr class="{% if e.status != 'OK' %}table-danger{% endif %}">
-                            <td>{{ e.name }}</td>
-                            <td>{{ e.status }}</td>
-                            <td>{{ e.state }}</td>
-                        </tr>
+                                    <div class="card-body">
+                                        <p><strong>IP:</strong> {{ sw.device_ip }}</p>
+
+                                        <p><strong>Status:</strong>
+                                            {% if sw.status == "reachable" %}
+                                                <span class="text-success">Reachable</span>
+                                            {% else %}
+                                                <span class="text-danger">Unreachable</span>
+                                            {% endif %}
+                                        </p>
+
+                                        {% if sw.fan %}
+                                            <p><strong>Fans:</strong>
+                                                {{ sw.fan.normal }}/{{ sw.fan.total }}
+                                            </p>
+                                        {% endif %}
+
+                                        {% if sw.power %}
+                                            <p><strong>Power:</strong>
+                                                {{ sw.power.normal }}/{{ sw.power.total }}
+                                            </p>
+                                        {% endif %}
+
+                                        {% if sw.error %}
+                                            <p class="text-danger">{{ sw.error }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
                         {% endfor %}
-                    </table>
+                    </div>
 
-                    <h6 class="mt-4">Servers ({{ ov.servers_summary.OK }}/{{ ov.servers_summary.total }})</h6>
-                    <table class="table table-sm table-bordered">
-                        <tr><th>Name</th><th>Power</th><th>Status</th></tr>
-                        {% for s in ov.servers %}
-                        <tr class="{% if s.status != 'OK' %}table-danger{% endif %}">
-                            <td>{{ s.name }}</td>
-                            <td>{{ s.powerState }}</td>
-                            <td>{{ s.status }}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                </div>
+                {% else %}
+                    <div class="alert alert-warning">
+                        Switch health file not loaded or not found.
+                    </div>
+                {% endif %}
 
-                <div class="card-footer text-center">
-                    {% if ov.enclosures_summary.Not_OK or ov.servers_summary.Not_OK %}
-                        <span class="badge bg-danger">Action Required</span>
-                    {% else %}
-                        <span class="badge bg-success">Healthy</span>
-                    {% endif %}
-                </div>
             </div>
-            {% endfor %}
-            {% else %}
-                <div class="alert alert-warning">{{ oneview_error }}</div>
-            {% endif %}
-        </div>
+            <!-- ================================================= -->
+            <!-- ONEVIEW TAB                                      -->
+            <!-- ================================================= -->
+            <div class="tab-pane fade" id="oneview" role="tabpanel">
 
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">OneView Health</h4>
+                    <span class="text-muted small">
+            File: {{ oneview_file|default:"N/A" }}
+        </span>
+                </div>
+                <hr class="mt-2 mb-4">
+
+                {% if oneview_file_exists %}
+
+                    {% for ov in oneview_data %}
+                        <div class="card mb-4 shadow-sm
+            {% if ov.enclosures_summary.Not_OK or ov.servers_summary.Not_OK %}
+                border-danger
+            {% else %}
+                border-success
+            {% endif %}
+        ">
+                            <div class="card-header
+                {% if ov.enclosures_summary.Not_OK or ov.servers_summary.Not_OK %}
+                    bg-danger text-white
+                {% else %}
+                    bg-success text-white
+                {% endif %}
+            ">
+                                <strong>{{ ov.oneview_name }}</strong>
+                                <span class="float-end">IP: {{ ov.oneview_ip }}</span>
+                            </div>
+
+                            <div class="card-body">
+                                <h6>Enclosures</h6>
+                                <table class="table table-sm">
+                                    {% for e in ov.enclosures %}
+                                        <tr class="{% if e.status != 'OK' %}table-danger{% endif %}">
+                                            <td>{{ e.name }}</td>
+                                            <td>{{ e.status }}</td>
+                                            <td>{{ e.state }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+
+                                <h6 class="mt-3">Servers</h6>
+                                <table class="table table-sm">
+                                    {% for s in ov.servers %}
+                                        <tr class="{% if s.status != 'OK' %}table-danger{% endif %}">
+                                            <td>{{ s.name }}</td>
+                                            <td>{{ s.powerState }}</td>
+                                            <td>{{ s.status }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                {% else %}
+                    <div class="alert alert-warning">
+                        OneView health file not loaded or not found.
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </div>
     </div>
-</div>
 {% endblock %}
