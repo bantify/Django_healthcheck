@@ -56,7 +56,7 @@ class RegisterForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data.get("email")
 
-        if not email.lower().endswith(self.ALLOWED_DOMAINS):
+        if not email.lower().endswith(ALLOWED_DOMAINS):
             raise forms.ValidationError(
                 "Email must be a Qvantel or Banglalink email address"
             )
