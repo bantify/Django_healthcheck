@@ -763,6 +763,13 @@
                                             </div>
                                         </div>
 
+                                        {% if vm.uptime_human %}
+                                            <p>
+                                                <strong>System Uptime:</strong>
+                                                {{ vm.uptime_human }}
+                                            </p>
+                                        {% endif %}
+
                                         <hr>
 
                                         <h6>Filesystem Usage</h6>
