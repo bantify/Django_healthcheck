@@ -46,7 +46,7 @@
                         data-bs-toggle="tab"
                         data-bs-target="#vm"
                         type="button">
-                    VM
+                    DBSS Machine
                 </button>
             </li>
         </ul>
@@ -786,7 +786,7 @@
 
                                     <!-- FOOTER -->
                                     <div class="card-footer text-center">
-                                        {% if vm.cpu_used_percent > 80 or vm.memory_used_percent > 80 %}
+                                        {% if vm.cpu_used_percent > 80 or vm.memory_used_percent > 80 or vm.error %}
                                             <span class="badge bg-danger">Critical</span>
                                         {% elif vm.cpu_used_percent > 60 or vm.memory_used_percent > 60 %}
                                             <span class="badge bg-warning">Warning</span>
