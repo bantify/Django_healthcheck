@@ -41,6 +41,14 @@
                     vCenter
                 </button>
             </li>
+            <li class="nav-item">
+                <button class="nav-link"
+                        data-bs-toggle="tab"
+                        data-bs-target="#vm"
+                        type="button">
+                    VM
+                </button>
+            </li>
         </ul>
 
         <div class="tab-content">
@@ -673,6 +681,129 @@
                     </div>
                 {% endif %}
 
+            </div>
+
+            <!-- ================================================= -->
+            <!-- VM TAB                                           -->
+            <!-- ================================================= -->
+            <div class="tab-pane fade" id="vm" role="tabpanel">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">VM Health</h4>
+                    <span class="text-muted small">File: {{ vm_file }}</span>
+                </div>
+                <hr class="mb-4">
+
+                {% if vm_file_exists %}
+
+                    <div class="row g-4">
+
+                        {% for vm in vm_data %}
+                            <div class="col-xl-4 col-lg-6 col-md-12">
+
+                                <div class="card h-100 shadow-sm
+                        {% if vm.cpu_used_percent > 80 or vm.memory_used_percent > 80 %}
+                            border-danger
+                        {% elif vm.cpu_used_percent > 60 or vm.memory_used_percent > 60 %}
+                            border-warning
+                        {% else %}
+                            border-success
+                        {% endif %}
+                    ">
+
+                                    <!-- HEADER -->
+                                    <div class="card-header
+                            {% if vm.cpu_used_percent > 80 or vm.memory_used_percent > 80 %}
+                                bg-danger text-white
+                            {% elif vm.cpu_used_percent > 60 or vm.memory_used_percent > 60 %}
+                                bg-warning
+                            {% else %}
+                                bg-success text-white
+                            {% endif %}
+                        ">
+                                        <strong>{{ vm.name }}</strong>
+                                        <span class="float-end">{{ vm.ip }}</span>
+                                    </div>
+
+                                    <!-- BODY -->
+                                    <div class="card-body">
+
+                                        <p><strong>CPU Used:</strong> {{ vm.cpu_used_percent }}%</p>
+                                        <div class="progress mb-2">
+                                            <div class="progress-bar
+                                    {% if vm.cpu_used_percent > 80 %}
+                                        bg-danger
+                                    {% elif vm.cpu_used_percent > 60 %}
+                                        bg-warning
+                                    {% else %}
+                                        bg-success
+                                    {% endif %}
+                                "
+                                                 style="width: {{ vm.cpu_used_percent }}%">
+                                            </div>
+                                        </div>
+
+                                        <p><strong>Memory Used:</strong> {{ vm.memory_used_percent }}%</p>
+                                        <div class="progress mb-3">
+                                            <div class="progress-bar
+                                    {% if vm.memory_used_percent > 80 %}
+                                        bg-danger
+                                    {% elif vm.memory_used_percent > 60 %}
+                                        bg-warning
+                                    {% else %}
+                                        bg-success
+                                    {% endif %}
+                                "
+                                                 style="width: {{ vm.memory_used_percent }}%">
+                                            </div>
+                                        </div>
+
+                                        <hr>
+
+                                        <h6>Filesystem Usage</h6>
+
+                                        {% for mount, fs in vm.filesystems.items %}
+                                            <p class="mb-1">
+                                                <strong>{{ mount }}</strong>
+                                                — {{ fs.used_percent }}%
+                                            </p>
+                                            <div class="progress mb-2">
+                                                <div class="progress-bar
+                                        {% if fs.used_percent > 80 %}
+                                            bg-danger
+                                        {% elif fs.used_percent > 60 %}
+                                            bg-warning
+                                        {% else %}
+                                            bg-success
+                                        {% endif %}
+                                    "
+                                                     style="width: {{ fs.used_percent }}%">
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+
+                                    </div>
+
+                                    <!-- FOOTER -->
+                                    <div class="card-footer text-center">
+                                        {% if vm.cpu_used_percent > 80 or vm.memory_used_percent > 80 %}
+                                            <span class="badge bg-danger">Critical</span>
+                                        {% elif vm.cpu_used_percent > 60 or vm.memory_used_percent > 60 %}
+                                            <span class="badge bg-warning">Warning</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Healthy</span>
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+                    <div class="alert alert-warning">VM health file not found.</div>
+                {% endif %}
             </div>
 
         </div>

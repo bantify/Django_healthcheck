@@ -24,6 +24,7 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
     ONEVIEW_DIR = Path("/var/log/healthcheck/oneview")
     F5_DIR = Path("/var/log/healthcheck/f5")
     VCENTER_DIR = Path("/var/log/healthcheck/vcenter")
+    VM_DIR = Path("/var/log/healthcheck/vcenter")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -168,5 +169,30 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
                 context["vcenter_error"] = "Vcenter health file not found."
         except Exception as e:
             context["vcenter_error"] = str(e)
+
+        # ==================================================
+        # VM HEALTH
+        # ==================================================
+        vm_filename = f"vm_health_{date_part}_{hour_part}.json"
+        vm_file_path = self.VM_DIR / vm_filename
+
+        context["vm_file"] = vm_filename
+        context["vm_data"] = []
+        context["vm_file_exists"] = False
+        context["vm_error"] = None
+
+        try:
+            if vm_file_path.exists():
+                with open(vm_file_path, "r") as f:
+                    context["vm_data"] = json.load(f)
+
+                context["vm_file_exists"] = True
+            else:
+                context["vm_error"] = "VM health file not found."
+
+        except json.JSONDecodeError:
+            context["vm_error"] = "Invalid VM health JSON format."
+        except Exception as e:
+            context["vm_error"] = str(e)
 
         return context
