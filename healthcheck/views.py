@@ -24,7 +24,7 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
     ONEVIEW_DIR = Path("/var/log/healthcheck/oneview")
     F5_DIR = Path("/var/log/healthcheck/f5")
     VCENTER_DIR = Path("/var/log/healthcheck/vcenter")
-    VM_DIR = Path("/var/log/healthcheck/vcenter")
+    VM_DIR = Path("/var/log/healthcheck/vms")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
