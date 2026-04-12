@@ -185,7 +185,32 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
             if vm_file_path.exists():
                 with open(vm_file_path, "r") as f:
                     context["vm_data"] = json.load(f)
+                # ================= VM HEALTH STATUS =================
+                for vm in context["vm_data"]:
 
+                    # 🚨 If metrics unavailable → CRITICAL
+                    if vm.get("error"):
+                        vm["health_status"] = "critical"
+                        vm["max_fs_used_percent"] = 0
+                        continue
+
+                    cpu = vm.get("cpu_used_percent", 0)
+                    memory = vm.get("memory_used_percent", 0)
+
+                    fs_used_values = [
+                        fs.get("used_percent", 0)
+                        for fs in vm.get("filesystems", {}).values()
+                    ]
+
+                    max_fs_used = max(fs_used_values) if fs_used_values else 0
+                    vm["max_fs_used_percent"] = max_fs_used
+
+                    if cpu > 80 or memory > 80 or max_fs_used > 80:
+                        vm["health_status"] = "critical"
+                    elif cpu > 60 or memory > 60 or max_fs_used > 60:
+                        vm["health_status"] = "warning"
+                    else:
+                        vm["health_status"] = "healthy"
                 context["vm_file_exists"] = True
             else:
                 context["vm_error"] = "VM health file not found."

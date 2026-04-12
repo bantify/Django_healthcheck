@@ -701,33 +701,38 @@
                         {% for vm in vm_data %}
                             <div class="col-xl-4 col-lg-6 col-md-12">
 
+
                                 <div class="card h-100 shadow-sm
-                        {% if vm.cpu_used_percent > 80 or vm.memory_used_percent > 80 %}
-                            border-danger
-                        {% elif vm.cpu_used_percent > 60 or vm.memory_used_percent > 60 %}
-                            border-warning
-                        {% else %}
-                            border-success
-                        {% endif %}
-                    ">
+                                    {% if vm.health_status == 'critical' %}
+                                        border-danger
+                                    {% elif vm.health_status == 'warning' %}
+                                        border-warning
+                                    {% else %}
+                                        border-success
+                                    {% endif %}
+                                ">
 
                                     <!-- HEADER -->
                                     <div class="card-header
-                            {% if vm.cpu_used_percent > 80 or vm.memory_used_percent > 80 %}
-                                bg-danger text-white
-                            {% elif vm.cpu_used_percent > 60 or vm.memory_used_percent > 60 %}
-                                bg-warning
-                            {% else %}
-                                bg-success text-white
-                            {% endif %}
-                        ">
+                                        {% if vm.health_status == 'critical' %}
+                                            bg-danger text-white
+                                        {% elif vm.health_status == 'warning' %}
+                                            bg-warning
+                                        {% else %}
+                                            bg-success text-white
+                                        {% endif %}
+                                    ">
                                         <strong>{{ vm.name }}</strong>
                                         <span class="float-end">{{ vm.ip }}</span>
                                     </div>
 
                                     <!-- BODY -->
                                     <div class="card-body">
-
+                                        {% if vm.error %}
+                                            <div class="alert alert-danger">
+                                                {{ vm.error }}
+                                            </div>
+                                        {% endif %}
                                         <p><strong>CPU Used:</strong> {{ vm.cpu_used_percent }}%</p>
                                         <div class="progress mb-2">
                                             <div class="progress-bar
@@ -786,13 +791,14 @@
 
                                     <!-- FOOTER -->
                                     <div class="card-footer text-center">
-                                        {% if vm.cpu_used_percent > 80 or vm.memory_used_percent > 80 or vm.error %}
+                                        {% if vm.health_status == 'critical' %}
                                             <span class="badge bg-danger">Critical</span>
-                                        {% elif vm.cpu_used_percent > 60 or vm.memory_used_percent > 60 %}
+                                        {% elif vm.health_status == 'warning' %}
                                             <span class="badge bg-warning">Warning</span>
                                         {% else %}
                                             <span class="badge bg-success">Healthy</span>
                                         {% endif %}
+
                                     </div>
 
                                 </div>
