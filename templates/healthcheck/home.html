@@ -80,13 +80,21 @@
                                             <p><strong>SPB:</strong> {{ s.spb_ip }} ({{ s.spb_status }})</p>
                                             <hr>
                                             <p><strong>Disks:</strong> {{ s.ok_disks }}/{{ s.total_disks }}</p>
-                                            <p>Failed: {{ s.failed_disks }}</p>
+                                            <p class="{% if s.failed_disks != 0 %}text-danger{% endif %}">
+                                                <strong>Failed:</strong> {{ s.failed_disks }}
+                                                {% if s.failed_disks != 0 %}
+                                                    🚩
+                                                {% endif %}
+                                            </p>
                                             <p>Bound: {{ s.bound_disks }}</p>
                                             <p>Unbound: {{ s.unbound_disks }}</p>
                                             <hr>
 
                                             <p class="{% if s.ok_pools != s.total_pools %}text-danger{% endif %}">
                                                 <strong>Pools:</strong> {{ s.ok_pools }}/{{ s.total_pools }}
+                                                {% if s.ok_pools != s.total_pools %}
+                                                    🚩
+                                                {% endif %}
                                             </p>
 
                                         </div>
@@ -113,8 +121,12 @@
                                             <p><strong>Disks:</strong>
                                                 {{ s.ok_disks }}/{{ s.total_disks }}
                                             </p>
-                                            <p><strong>IOM:</strong>
+                                            <p class="{% if s.ok_iomodules != s.total_iomodules %}text-danger{% endif %}">
+                                                <strong>IOM:</strong>
                                                 {{ s.ok_iomodules }}/{{ s.total_iomodules }}
+                                                {% if s.ok_iomodules != s.total_iomodules %}
+                                                    🚩
+                                                {% endif %}
                                             </p>
                                         </div>
                                     </div>
