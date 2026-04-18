@@ -115,11 +115,19 @@
                                                 SPA {{ s.cpu_utilization.spa }}% /
                                                 SPB {{ s.cpu_utilization.spb }}%
                                             </p>
-                                            <p><strong>SP:</strong>
+                                            <p class="{% if s.ok_service_processors != s.total_service_processors %}text-danger{% endif %}">
+                                                <strong>SP:</strong>
                                                 {{ s.ok_service_processors }}/{{ s.total_service_processors }}
+                                                {% if s.ok_service_processors != s.total_service_processors %}
+                                                    🚩
+                                                {% endif %}
                                             </p>
-                                            <p><strong>Disks:</strong>
+                                            <p class="{% if s.ok_disks != s.total_disks %}text-danger{% endif %}">
+                                                <strong>Disks:</strong>
                                                 {{ s.ok_disks }}/{{ s.total_disks }}
+                                                {% if s.ok_disks != s.total_disks %}
+                                                    🚩
+                                                {% endif %}
                                             </p>
                                             <p class="{% if s.ok_iomodules != s.total_iomodules %}text-danger{% endif %}">
                                                 <strong>IOM:</strong>
