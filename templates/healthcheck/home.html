@@ -22,7 +22,8 @@
                 <select name="hour" class="form-select">
                     {% for h in hours %}
                         <option value="{{ h }}"
-                                {% if h == selected_hour %}selected{% endif %}>
+                                {% if h == selected_hour %}selected{% endif %}
+                                {% if selected_date == today and h > selected_hour %}disabled{% endif %}>
                             {{ h }}:00
                         </option>
                     {% endfor %}

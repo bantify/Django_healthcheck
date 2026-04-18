@@ -52,7 +52,8 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
         context["selected_date"] = date_part
         context["selected_hour"] = hour_part
         context["loaded_time"] = f"{date_part} {hour_part}:00"
-
+        context["hours"] = [f"{h:02d}" for h in range(24)]
+        context["today"] = datetime.now(tz=LOCAL_TZ).strftime("%Y-%m-%d")
         # ==================================================
         # STORAGE
         # ==================================================
@@ -163,26 +164,28 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
         vcenter_file = f"vcenter_health_{date_part}_{hour_part}.json"
         vcenter_path = self.VCENTER_DIR / vcenter_file
 
-        context["vcenter_file"] = f5_file
+        context["vcenter_file"] = vcenter_file
         context["vcenter_data"] = []
         context["vcenter_file_exists"] = False
         context["vcenter_error"] = None
 
         try:
-            if f5_path.exists():
+            if vcenter_path.exists():
                 context["vcenter_data"] = json.loads(vcenter_path.read_text())
                 context["vcenter_file_exists"] = True
-            for vc in context["vcenter_data"]:
-                for ds in vc["datastores_info"]["datastores"]:
-                    if ds["capacity_gb"] > 0:
-                        ds["free_percent"] = round(
-                            (ds["free_space_gb"] / ds["capacity_gb"]) * 100,
-                            2
-                        )
-                    else:
-                        ds["free_percent"] = 0
+
+                for vc in context["vcenter_data"]:
+                    for ds in vc["datastores_info"]["datastores"]:
+                        if ds["capacity_gb"] > 0:
+                            ds["free_percent"] = round(
+                                (ds["free_space_gb"] / ds["capacity_gb"]) * 100,
+                                2
+                            )
+                        else:
+                            ds["free_percent"] = 0
             else:
                 context["vcenter_error"] = "Vcenter health file not found."
+
         except Exception as e:
             context["vcenter_error"] = str(e)
 
