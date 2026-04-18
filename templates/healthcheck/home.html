@@ -2,6 +2,40 @@
 
 {% block title %}Health Check Dashboard{% endblock %}
 
+<form method="get" class="d-flex justify-content-center align-items-end gap-3 mb-4">
+    <div>
+        <label class="form-label mb-0">Date</label>
+        <input type="date"
+               name="date"
+               class="form-control"
+               value="{{ selected_date }}">
+    </div>
+
+    <div>
+        <label class="form-label mb-0">Hour</label>
+        <select name="hour" class="form-select">
+            {% for h in hours %}
+                <option value="{{ h }}"
+                        {% if h == selected_hour %}selected{% endif %}>
+                    {{ h }}:00
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-primary">
+            Load
+        </button>
+    </div>
+</form>
+
+{% if loaded_time %}
+    <p class="text-center text-muted small mb-3">
+        Showing data for: <strong>{{ loaded_time }}</strong>
+    </p>
+{% endif %}
+
 {% block content %}
     <div class="container-fluid">
 
