@@ -83,7 +83,7 @@
                                             <p class="{% if s.failed_disks != 0 %}text-danger{% endif %}">
                                                 <strong>Failed:</strong> {{ s.failed_disks }}
                                                 {% if s.failed_disks != 0 %}
-                                                    🚩
+                                                    <span class="blink-flag">🚩</span>
                                                 {% endif %}
                                             </p>
                                             <p>Bound: {{ s.bound_disks }}</p>
@@ -93,7 +93,7 @@
                                             <p class="{% if s.ok_pools != s.total_pools %}text-danger{% endif %}">
                                                 <strong>Pools:</strong> {{ s.ok_pools }}/{{ s.total_pools }}
                                                 {% if s.ok_pools != s.total_pools %}
-                                                    🚩
+                                                    <span class="blink-flag">🚩</span>
                                                 {% endif %}
                                             </p>
 
@@ -119,21 +119,21 @@
                                                 <strong>SP:</strong>
                                                 {{ s.ok_service_processors }}/{{ s.total_service_processors }}
                                                 {% if s.ok_service_processors != s.total_service_processors %}
-                                                    🚩
+                                                   <span class="blink-flag">🚩</span>
                                                 {% endif %}
                                             </p>
                                             <p class="{% if s.ok_disks != s.total_disks %}text-danger{% endif %}">
                                                 <strong>Disks:</strong>
                                                 {{ s.ok_disks }}/{{ s.total_disks }}
                                                 {% if s.ok_disks != s.total_disks %}
-                                                    🚩
+                                                    <span class="blink-flag">🚩</span>
                                                 {% endif %}
                                             </p>
                                             <p class="{% if s.ok_iomodules != s.total_iomodules %}text-danger{% endif %}">
                                                 <strong>IOM:</strong>
                                                 {{ s.ok_iomodules }}/{{ s.total_iomodules }}
                                                 {% if s.ok_iomodules != s.total_iomodules %}
-                                                    🚩
+                                                   <span class="blink-flag">🚩</span>
                                                 {% endif %}
                                             </p>
                                         </div>

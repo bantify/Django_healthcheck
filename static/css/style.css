@@ -5,3 +5,12 @@
     transform: translateY(-4px);
 }
 
+.blink-flag {
+    font-size: 2rem;
+    color: red;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
