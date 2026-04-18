@@ -33,11 +33,25 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
         # Use NON-timezone-aware current time (as requested)
         # --------------------------------------------------
         LOCAL_TZ = ZoneInfo("Asia/Dhaka")
-        now = datetime.now(tz=ZoneInfo("UTC")).astimezone(LOCAL_TZ)
-        previous_hour = now - timedelta(hours=1)
 
-        date_part = previous_hour.strftime("%Y-%m-%d")
-        hour_part = previous_hour.strftime("%H")
+        date_part = self.request.GET.get("date")
+        hour_part = self.request.GET.get("hour")
+
+        if not date_part or not hour_part:
+            now = datetime.now(tz=LOCAL_TZ)
+            previous_hour = now - timedelta(hours=1)
+            date_part = previous_hour.strftime("%Y-%m-%d")
+            hour_part = previous_hour.strftime("%H")
+
+        # now = datetime.now(tz=ZoneInfo("UTC")).astimezone(LOCAL_TZ)
+        # previous_hour = now - timedelta(hours=1)
+        #
+        # date_part = previous_hour.strftime("%Y-%m-%d")
+        # hour_part = previous_hour.strftime("%H")
+
+        context["selected_date"] = date_part
+        context["selected_hour"] = hour_part
+        context["loaded_time"] = f"{date_part} {hour_part}:00"
 
         # ==================================================
         # STORAGE
@@ -49,6 +63,7 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
         context["storage_data"] = []
         context["storage_file_exists"] = False
         context["storage_error"] = None
+
 
         try:
             if storage_file_path.exists():
@@ -89,6 +104,7 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
         context["switch_data"] = []
         context["switch_file_exists"] = False
         context["switch_error"] = None
+
 
         try:
             if switch_file_path.exists():
