@@ -119,7 +119,7 @@
                                                 <strong>SP:</strong>
                                                 {{ s.ok_service_processors }}/{{ s.total_service_processors }}
                                                 {% if s.ok_service_processors != s.total_service_processors %}
-                                                   <span class="blink-flag">🚩</span>
+                                                    <span class="blink-flag">🚩</span>
                                                 {% endif %}
                                             </p>
                                             <p class="{% if s.ok_disks != s.total_disks %}text-danger{% endif %}">
@@ -133,7 +133,7 @@
                                                 <strong>IOM:</strong>
                                                 {{ s.ok_iomodules }}/{{ s.total_iomodules }}
                                                 {% if s.ok_iomodules != s.total_iomodules %}
-                                                   <span class="blink-flag">🚩</span>
+                                                    <span class="blink-flag">🚩</span>
                                                 {% endif %}
                                             </p>
                                         </div>
@@ -208,9 +208,15 @@
                                             {% for tier, d in s.disk.items %}
                                                 <p class="mb-1">
                                                     <strong>{{ tier }}</strong><br>
-                                                    Disks: {{ d.normal_count }}/{{ d.total_disks }}<br>
-                                                    Used: {{ d.used_gb }} GB |
-                                                    Free: {{ d.free_gb }} GB ({{ d.free_percent }}%)
+                                                <p class="{% if d.normal_count != d.total_disks %}text-danger{% endif %}">
+                                                    <strong>Disks:</strong>
+                                                    {{ d.normal_count }}/{{ d.total_disks }}
+                                                    {% if d.normal_count != d.total_disks %}
+                                                        <span class="blink-flag">🚩</span>
+                                                    {% endif %}
+                                                </p><br>
+                                                Used: {{ d.used_gb }} GB |
+                                                Free: {{ d.free_gb }} GB ({{ d.free_percent }}%)
                                                 </p>
                                                 <div class="progress mb-3">
                                                     <div class="progress-bar
