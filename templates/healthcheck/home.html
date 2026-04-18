@@ -84,7 +84,11 @@
                                             <p>Bound: {{ s.bound_disks }}</p>
                                             <p>Unbound: {{ s.unbound_disks }}</p>
                                             <hr>
-                                            <p><strong>Pools:</strong> {{ s.ok_pools }}/{{ s.total_pools }}</p>
+
+                                            <p class="{% if s.ok_pools != s.total_pools %}text-danger{% endif %}">
+                                                <strong>Pools:</strong> {{ s.ok_pools }}/{{ s.total_pools }}
+                                            </p>
+
                                         </div>
                                     </div>
                                 </div>
