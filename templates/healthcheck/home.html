@@ -23,7 +23,7 @@
                     {% for h in hours %}
                         <option value="{{ h }}"
                                 {% if h == selected_hour %}selected{% endif %}
-                                {% if selected_date == today and h > selected_hour %}disabled{% endif %}>
+                                {% if selected_date == today and h > current_hour %}disabled{% endif %}>
                             {{ h }}:00
                         </option>
                     {% endfor %}
@@ -117,7 +117,7 @@
                                             <p class="{% if s.failed_disks != 0 %}text-danger{% endif %}">
                                                 <strong>Failed:</strong> {{ s.failed_disks }}
                                                 {% if s.failed_disks != 0 %}
-                                                    <span class="blink-flag">🚩</span>
+                                                    <span class="blink-flag">🚩 🚩</span>
                                                 {% endif %}
                                             </p>
                                             <p>Bound: {{ s.bound_disks }}</p>
@@ -127,7 +127,7 @@
                                             <p class="{% if s.ok_pools != s.total_pools %}text-danger{% endif %}">
                                                 <strong>Pools:</strong> {{ s.ok_pools }}/{{ s.total_pools }}
                                                 {% if s.ok_pools != s.total_pools %}
-                                                    <span class="blink-flag">🚩</span>
+                                                    <span class="blink-flag">🚩 🚩</span>
                                                 {% endif %}
                                             </p>
 
@@ -153,21 +153,21 @@
                                                 <strong>SP:</strong>
                                                 {{ s.ok_service_processors }}/{{ s.total_service_processors }}
                                                 {% if s.ok_service_processors != s.total_service_processors %}
-                                                    <span class="blink-flag">🚩</span>
+                                                    <span class="blink-flag">🚩🚩</span>
                                                 {% endif %}
                                             </p>
                                             <p class="{% if s.ok_disks != s.total_disks %}text-danger{% endif %}">
                                                 <strong>Disks:</strong>
                                                 {{ s.ok_disks }}/{{ s.total_disks }}
                                                 {% if s.ok_disks != s.total_disks %}
-                                                    <span class="blink-flag">🚩</span>
+                                                    <span class="blink-flag">🚩🚩</span>
                                                 {% endif %}
                                             </p>
                                             <p class="{% if s.ok_iomodules != s.total_iomodules %}text-danger{% endif %}">
                                                 <strong>IOM:</strong>
                                                 {{ s.ok_iomodules }}/{{ s.total_iomodules }}
                                                 {% if s.ok_iomodules != s.total_iomodules %}
-                                                    <span class="blink-flag">🚩</span>
+                                                    <span class="blink-flag">🚩🚩</span>
                                                 {% endif %}
                                             </p>
                                         </div>
@@ -246,7 +246,7 @@
                                                     <strong>Disks:</strong>
                                                     {{ d.normal_count }}/{{ d.total_disks }}
                                                     {% if d.normal_count != d.total_disks %}
-                                                        <span class="blink-flag">🚩</span>
+                                                        <span class="blink-flag">🚩🚩</span>
                                                     {% endif %}
                                                 </p><br>
                                                 Used: {{ d.used_gb }} GB |
@@ -421,14 +421,26 @@
 
                                         {% if sw.fan %}
                                             <p><strong>Fans:</strong>
+                                            <p class="{% if sw.fan.normal != sw.fan.total %}text-danger{% endif %}">
+                                                <strong>Fans:</strong>
                                                 {{ sw.fan.normal }}/{{ sw.fan.total }}
+                                                {% if sw.fan.normal != sw.fan.total %}
+                                                    <span class="blink-flag">🚩🚩</span>
+                                                {% endif %}
                                             </p>
+
                                         {% endif %}
 
                                         {% if sw.power %}
                                             <p><strong>Power:</strong>
+                                            <p class="{% if sw.power.normal != sw.power.total %}text-danger{% endif %}">
+                                                <strong>Power:</strong>
                                                 {{ sw.power.normal }}/{{ sw.power.total }}
+                                                {% if sw.power.normal != sw.power.total %}
+                                                    <span class="blink-flag">🚩🚩</span>
+                                                {% endif %}
                                             </p>
+
                                         {% endif %}
 
                                         {% if sw.error %}
