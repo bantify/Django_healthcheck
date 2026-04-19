@@ -20,6 +20,6 @@ from accounts.views import CustomLoginView,CustomRegisterView,CustomLogoutView,C
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('healthcheck.urls'), name="home"),
+    path('', include('healthcheck.urls')),
     path('accounts/', include('accounts.urls')),
 ]
