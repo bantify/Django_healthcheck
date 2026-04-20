@@ -25,6 +25,7 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
     F5_DIR = Path("/var/log/healthcheck/f5")
     VCENTER_DIR = Path("/var/log/healthcheck/vcenter")
     VM_DIR = Path("/var/log/healthcheck/vms")
+    SAN_SWITCH_DIR = Path("/var/log/healthcheck/san_switch")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -118,6 +119,29 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
             context["switch_error"] = "Invalid switch JSON format."
         except Exception as e:
             context["switch_error"] = str(e)
+
+        # ==================================================
+        # SAN SWITCH
+        # ==================================================
+        san_switch_filename = f"san_switch_health_{date_part}_{hour_part}.json"
+        san_switch_file_path = self.SAN_SWITCH_DIR / san_switch_filename
+
+        context["san_switch_file"] = san_switch_filename
+        context["san_switch_data"] = []
+        context["san_switch_file_exists"] = False
+        context["san_switch_error"] = None
+
+        try:
+            if san_switch_file_path.exists():
+                with open(san_switch_file_path, "r") as f:
+                    context["san_switch_data"] = json.load(f)
+                context["san_switch_file_exists"] = True
+            else:
+                context["san_switch_error"] = "SAN switch health file not found."
+        except json.JSONDecodeError:
+            context["san_switch_error"] = "Invalid SAN switch JSON format."
+        except Exception as e:
+            context["san_switch_error"] = str(e)
 
         # ==================================================
         # ONEVIEW

@@ -83,6 +83,14 @@
                     DBSS Machine
                 </button>
             </li>
+            <li class="nav-item">
+                <button class="nav-link"
+                        data-bs-toggle="tab"
+                        data-bs-target="#san-switch"
+                        type="button">
+                    SAN Switch
+                </button>
+            </li>
         </ul>
 
         <div class="tab-content">
@@ -893,7 +901,103 @@
                     <div class="alert alert-warning">VM health file not found.</div>
                 {% endif %}
             </div>
+            <!-- ================================================= -->
+            <!-- SAN Switch TAB                                    -->
+            <!-- ================================================= -->
 
+            <div class="tab-pane fade" id="san-switch" role="tabpanel">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">SAN Switch Health</h4>
+                    <span class="text-muted small">File: {{ san_switch_file }}</span>
+                </div>
+                <hr class="mb-4">
+
+                {% if san_switch_file_exists %}
+                    <div class="row g-4">
+                        {% for sw in san_switch_data %}
+                            <div class="col-xl-3 col-lg-4 col-md-6">
+                                <div class="card h-100
+                        {% if sw.fans.failed or sw.power_supply.failed %}
+                            border-danger
+                        {% else %}
+                            border-success
+                        {% endif %}
+                    ">
+                                    <div class="card-header
+                            {% if sw.fans.failed or sw.power_supply.failed %}
+                                bg-danger
+                            {% else %}
+                                bg-success
+                            {% endif %}
+                            text-white
+                        ">
+                                        {{ sw.hostname }}
+                                    </div>
+
+                                    <div class="card-body">
+                                        <p><strong>IP:</strong> {{ sw.ip }}</p>
+
+                                        {% if sw.cpu.user_percent %}
+                                            <p>
+                                                <strong>CPU:</strong>
+                                                User {{ sw.cpu.user_percent }}% /
+                                                System {{ sw.cpu.system_percent }}% /
+                                                Idle {{ sw.cpu.idle_percent }}%
+                                            </p>
+                                        {% endif %}
+
+                                        {% if sw.memory.used_percent %}
+                                            <p
+                                                    class="{% if sw.memory.used_percent > 80 %}text-danger{% endif %}">
+                                                <strong>Memory:</strong>
+                                                {{ sw.memory.used_percent }}%
+                                            </p>
+                                        {% endif %}
+
+                                        <p class="{% if sw.fans.ok != sw.fans.total %}text-danger{% endif %}">
+                                            <strong>Fans:</strong>
+                                            {{ sw.fans.ok }}/{{ sw.fans.total }}
+                                            {% if sw.fans.ok != sw.fans.total %}
+                                                <span class="blink-flag">🚩🚩</span>
+                                            {% endif %}
+                                        </p>
+
+                                        <p class="{% if sw.power_supply.ok != sw.power_supply.total %}text-danger{% endif %}">
+                                            <strong>Power:</strong>
+                                            {{ sw.power_supply.ok }}/{{ sw.power_supply.total }}
+                                            {% if sw.power_supply.ok != sw.power_supply.total %}
+                                                <span class="blink-flag">🚩🚩</span>
+                                            {% endif %}
+                                        </p>
+
+                                        <hr>
+
+                                        <p><strong>Ports:</strong></p>
+                                        <ul class="mb-0">
+                                            <li class="text-success">
+                                                Green: {{ sw.ports.green_ports }}
+                                            </li>
+                                            {% if sw.ports.yellow_ports > 0 %}
+                                                <li class="text-warning">
+                                                    Yellow: {{ sw.ports.yellow_ports }}
+                                                </li>
+                                            {% endif %}
+                                            <li>
+                                                Other: {{ sw.ports.other_ports }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning">
+                        {{ san_switch_error }}
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}
