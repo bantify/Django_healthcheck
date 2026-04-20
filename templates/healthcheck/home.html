@@ -428,27 +428,25 @@
                                         {% endif %}
 
                                         {% if sw.fan %}
-                                            <p><strong>Fans:</strong>
                                             <p class="{% if sw.fan.normal != sw.fan.total %}text-danger{% endif %}">
                                                 <strong>Fans:</strong>
-                                                {{ sw.fan.normal }}/{{ sw.fan.total }}
+                                                Total: {{ sw.fan.total }},
+                                                Normal: {{ sw.fan.normal }}
                                                 {% if sw.fan.normal != sw.fan.total %}
                                                     <span class="blink-flag">🚩🚩</span>
                                                 {% endif %}
                                             </p>
-
                                         {% endif %}
 
                                         {% if sw.power %}
-                                            <p><strong>Power:</strong>
                                             <p class="{% if sw.power.normal != sw.power.total %}text-danger{% endif %}">
                                                 <strong>Power:</strong>
-                                                {{ sw.power.normal }}/{{ sw.power.total }}
+                                                Total: {{ sw.power.total }},
+                                                Normal: {{ sw.power.normal }}
                                                 {% if sw.power.normal != sw.power.total %}
                                                     <span class="blink-flag">🚩🚩</span>
                                                 {% endif %}
                                             </p>
-
                                         {% endif %}
 
                                         {% if sw.error %}
@@ -955,22 +953,25 @@
                                             </p>
                                         {% endif %}
 
-                                        <p class="{% if sw.fans.ok != sw.fans.total %}text-danger{% endif %}">
-                                            <strong>Fans:</strong>
-                                            {{ sw.fans.ok }}/{{ sw.fans.total }}
-                                            {% if sw.fans.ok != sw.fans.total %}
+                                        <p class="{% if sw.fans.failed > 0 %}text-danger{% endif %}">
+                                            <strong>Fans:</strong><br>
+                                            Total: {{ sw.fans.total }}<br>
+                                            OK: {{ sw.fans.ok }}<br>
+                                            Failed: {{ sw.fans.failed }}
+                                            {% if sw.fans.failed > 0 %}
                                                 <span class="blink-flag">🚩🚩</span>
                                             {% endif %}
                                         </p>
 
-                                        <p class="{% if sw.power_supply.ok != sw.power_supply.total %}text-danger{% endif %}">
-                                            <strong>Power:</strong>
-                                            {{ sw.power_supply.ok }}/{{ sw.power_supply.total }}
-                                            {% if sw.power_supply.ok != sw.power_supply.total %}
+                                        <p class="{% if sw.power_supply.failed > 0 %}text-danger{% endif %}">
+                                            <strong>Power:</strong><br>
+                                            Total: {{ sw.power_supply.total }}<br>
+                                            OK: {{ sw.power_supply.ok }}<br>
+                                            Failed: {{ sw.power_supply.failed }}
+                                            {% if sw.power_supply.failed > 0 %}
                                                 <span class="blink-flag">🚩🚩</span>
                                             {% endif %}
                                         </p>
-
                                         <hr>
 
                                         <p><strong>Ports:</strong></p>
