@@ -948,15 +948,15 @@
                                         {% if sw.memory.used_percent %}
                                             <p
                                                     class="{% if sw.memory.used_percent > 80 %}text-danger{% endif %}">
-                                                <strong>Memory:</strong>
+                                                <strong>Memory Used(%):</strong>
                                                 {{ sw.memory.used_percent }}%
                                             </p>
                                         {% endif %}
 
                                         <p class="{% if sw.fans.failed > 0 %}text-danger{% endif %}">
                                             <strong>Fans:</strong><br>
-                                            Total: {{ sw.fans.total }}<br>
-                                            OK: {{ sw.fans.ok }}<br>
+                                            Total: {{ sw.fans.total }},
+                                            OK: {{ sw.fans.ok }},
                                             Failed: {{ sw.fans.failed }}
                                             {% if sw.fans.failed > 0 %}
                                                 <span class="blink-flag">🚩🚩</span>
@@ -965,8 +965,8 @@
 
                                         <p class="{% if sw.power_supply.failed > 0 %}text-danger{% endif %}">
                                             <strong>Power:</strong><br>
-                                            Total: {{ sw.power_supply.total }}<br>
-                                            OK: {{ sw.power_supply.ok }}<br>
+                                            Total: {{ sw.power_supply.total }},
+                                            OK: {{ sw.power_supply.ok }},
                                             Failed: {{ sw.power_supply.failed }}
                                             {% if sw.power_supply.failed > 0 %}
                                                 <span class="blink-flag">🚩🚩</span>
