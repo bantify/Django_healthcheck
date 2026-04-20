@@ -25,7 +25,7 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
     F5_DIR = Path("/var/log/healthcheck/f5")
     VCENTER_DIR = Path("/var/log/healthcheck/vcenter")
     VM_DIR = Path("/var/log/healthcheck/vms")
-    SAN_SWITCH_DIR = Path("/var/log/healthcheck/san_switch")
+    SAN_SWITCH_DIR = Path("/var/log/healthcheck/san")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -66,7 +66,6 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
         context["storage_file_exists"] = False
         context["storage_error"] = None
 
-
         try:
             if storage_file_path.exists():
                 with open(storage_file_path, "r") as f:
@@ -106,7 +105,6 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
         context["switch_data"] = []
         context["switch_file_exists"] = False
         context["switch_error"] = None
-
 
         try:
             if switch_file_path.exists():
