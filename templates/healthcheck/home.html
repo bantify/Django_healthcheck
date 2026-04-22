@@ -954,7 +954,7 @@
                                         {% endif %}
 
                                         <p class="{% if sw.fans.failed > 0 %}text-danger{% endif %}">
-                                            <strong>Fans:</strong><br>
+                                            <strong>Fans:</strong>
                                             Total: {{ sw.fans.total }},
                                             OK: {{ sw.fans.ok }},
                                             Failed: {{ sw.fans.failed }}
@@ -964,7 +964,7 @@
                                         </p>
 
                                         <p class="{% if sw.power_supply.failed > 0 %}text-danger{% endif %}">
-                                            <strong>Power:</strong><br>
+                                            <strong>Power:</strong>
                                             Total: {{ sw.power_supply.total }},
                                             OK: {{ sw.power_supply.ok }},
                                             Failed: {{ sw.power_supply.failed }}
@@ -973,28 +973,26 @@
                                             {% endif %}
                                         </p>
                                         <p class="{% if sw.crc_errors > 0 %}text-danger{% else %}text-success{% endif %}">
-                                            <strong>CRC Error:</strong><br>
-                                            {{ sw.crc_errors }}
+                                            <strong>CRC Error:</strong>{{ sw.crc_errors }}
                                             {% if sw.crc_errors > 0 %}
                                                 <span class="blink-flag">🚩🚩</span>
                                             {% endif %}
-                                        </p> 
+                                        </p>
                                         <hr>
 
                                         <p><strong>Ports:</strong></p>
-                                        <ul class="mb-0">
-                                            <li class="text-success">
-                                                Green: {{ sw.ports.green_ports }}
-                                            </li>
-                                            {% if sw.ports.yellow_ports > 0 %}
-                                                <li class="text-warning">
-                                                    Yellow: {{ sw.ports.yellow_ports }}
-                                                </li>
-                                            {% endif %}
-                                            <li>
-                                                Other: {{ sw.ports.other_ports }}
-                                            </li>
-                                        </ul>
+
+                                        Green: {{ sw.ports.green_ports }}
+
+                                        {% if sw.ports.yellow_ports > 0 %}
+
+                                            Yellow: {{ sw.ports.yellow_ports }}
+
+                                        {% endif %}
+                                        
+                                        Other: {{ sw.ports.other_ports }}
+
+
                                     </div>
                                 </div>
                             </div>
