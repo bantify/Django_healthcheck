@@ -972,13 +972,13 @@
                                                 <span class="blink-flag">🚩🚩</span>
                                             {% endif %}
                                         </p>
-                                        <p class="{% if sw.crc_errors > 0 %}text-danger{% endif %}">
+                                        <p class="{% if sw.crc_errors > 0 %}text-danger{% else %}text-success{% endif %}">
                                             <strong>CRC Error:</strong><br>
-                                            {{ sw.sw.crc_errors }},
+                                            {{ sw.crc_errors }}
                                             {% if sw.crc_errors > 0 %}
                                                 <span class="blink-flag">🚩🚩</span>
                                             {% endif %}
-                                        </p>                                    
+                                        </p>
                                         <hr>
 
                                         <p><strong>Ports:</strong></p>
