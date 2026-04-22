@@ -574,18 +574,35 @@
 
                                         <p><strong>CPU Used:</strong> {{ lb.cpu_used }}%</p>
                                         <p><strong>Memory Used:</strong> {{ lb.memory_used }}%</p>
-                                        <p><strong>Active Session:</strong> {{ lb.active_sessions }}%</p>
+                                        <p><strong>Active Session:</strong> {{ lb.active_sessions }}</p>
 
                                         <hr>
 
                                         <h6>VIPs</h6>
-                                        <p>Total: {{ lb.total_vips }}</p>
-                                        <p>Enabled: {{ lb.enabled_vips }}</p>
-                                        <p>Healthy: {{ lb.healthy_vips }}</p>
-                                        <p>Disabled: {{ lb.disabled_vips }}</p>
-                                        <p class="{% if lb.unhealthy_vips > 0 %}text-danger{% endif %}">
-                                            Unhealthy: {{ lb.unhealthy_vips }}
-                                        </p>
+
+                                        <table class="table table-sm table-bordered text-center">
+                                            <thead class="table-light">
+                                            <tr>
+                                                <th>Total</th>
+                                                <th>Enabled</th>
+                                                <th>Healthy</th>
+                                                <th>Disabled</th>
+                                                <th>Unhealthy</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>{{ lb.total_vips }}</td>
+                                                <td>{{ lb.enabled_vips }}</td>
+                                                <td class="text-success">{{ lb.healthy_vips }}</td>
+                                                <td>{{ lb.disabled_vips }}</td>
+                                                <td class="{% if lb.unhealthy_vips > 0 %}text-danger{% else %}text-success{% endif %}">
+                                                    {{ lb.unhealthy_vips }}
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
 
                                         <hr>
 
@@ -990,7 +1007,7 @@
                                             Yellow: {{ sw.ports.yellow_ports }}
 
                                         {% endif %}
-                                        
+
                                         Other: {{ sw.ports.other_ports }}
 
 
