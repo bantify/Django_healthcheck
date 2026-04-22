@@ -574,6 +574,7 @@
 
                                         <p><strong>CPU Used:</strong> {{ lb.cpu_used }}%</p>
                                         <p><strong>Memory Used:</strong> {{ lb.memory_used }}%</p>
+                                        <p><strong>Active Session:</strong> {{ lb.active_sessions }}%</p>
 
                                         <hr>
 
@@ -973,7 +974,7 @@
                                             {% endif %}
                                         </p>
                                         <p class="{% if sw.crc_errors > 0 %}text-danger{% else %}text-success{% endif %}">
-                                            <strong>CRC Error:</strong>{{ sw.crc_errors }}
+                                            <strong>CRC Error: </strong>{{ sw.crc_errors }}
                                             {% if sw.crc_errors > 0 %}
                                                 <span class="blink-flag">🚩🚩</span>
                                             {% endif %}
