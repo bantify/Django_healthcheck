@@ -602,16 +602,32 @@
                                             </tr>
                                             </tbody>
                                         </table>
- 
+
 
                                         <hr>
-
                                         <h6>Pools</h6>
-                                        <p>Total: {{ lb.total_pools }}</p>
-                                        <p>Healthy: {{ lb.healthy_pools }}</p>
-                                        <p class="{% if lb.unhealthy_pools > 0 %}text-danger{% endif %}">
-                                            Unhealthy: {{ lb.unhealthy_pools }}
-                                        </p>
+
+                                        <table class="table table-sm table-bordered text-center">
+                                            <thead class="table-light">
+                                            <tr>
+                                                <th>Total</th>
+                                                <th>Healthy</th>
+                                                <th>Unhealthy</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>{{ lb.total_pools }}</td>
+                                                <td class="text-success">{{ lb.healthy_pools }}</td>
+                                                <td class="{% if lb.unhealthy_pools > 0 %}text-danger{% else %}text-success{% endif %}">
+                                                    {{ lb.unhealthy_pools }}
+                                                    {% if lb.unhealthy_pools > 0 %}
+                                                        <span class="blink-flag">🚩</span>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
 
                                     <div class="card-footer text-center">
