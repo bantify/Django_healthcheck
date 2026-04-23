@@ -55,6 +55,14 @@
                 </button>
             </li>
             <li class="nav-item">
+                <button class="nav-link"
+                        data-bs-toggle="tab"
+                        data-bs-target="#firewall"
+                        type="button">
+                    Firewall
+                </button>
+            </li>
+            <li class="nav-item">
                 <button class="nav-link" data-bs-toggle="tab" data-bs-target="#oneview" type="button">
                     OneView
                 </button>
@@ -1006,7 +1014,7 @@
                                                 <span class="blink-flag">🚩🚩</span>
                                             {% endif %}
                                         </p>
-                                        <p class="{% if sw.crc_errors > 0 %}text-danger{% else %}text-success{% endif %}">
+                                        <p>
                                             <strong>CRC Error: </strong>{{ sw.crc_errors }}
                                             {% if sw.crc_errors > 0 %}
                                                 <span class="blink-flag">🚩🚩</span>
@@ -1035,6 +1043,127 @@
                 {% else %}
                     <div class="alert alert-warning">
                         {{ san_switch_error }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- ================================================= -->
+            <!-- FW TAB                                            -->
+            <!-- ================================================= -->
+            <div class="tab-pane fade" id="firewall" role="tabpanel">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">Firewall Health</h4>
+                    <span class="text-muted small">File: {{ fw_file }}</span>
+                </div>
+                <hr class="mb-4">
+
+                {% if fw_file_exists %}
+                    <div class="row g-4">
+                        {% for fw in fw_data %}
+                            <div class="col-xl-4 col-lg-6 col-md-12">
+                                <div class="card h-100
+                        {% if fw.memory_used_percent > 80 %}
+                            border-danger
+                        {% elif fw.memory_used_percent > 60 %}
+                            border-warning
+                        {% else %}
+                            border-success
+                        {% endif %}
+                    ">
+
+                                    <!-- HEADER -->
+                                    <div class="card-header
+                            {% if fw.role == 'primary' %}
+                                bg-success
+                            {% else %}
+                                bg-secondary
+                            {% endif %}
+                            text-white
+                        ">
+                                        <strong>{{ fw.name }}</strong>
+                                        <span class="badge bg-dark float-end">
+                                {{ fw.role|upper }}
+                            </span>
+                                    </div>
+
+                                    <!-- BODY -->
+                                    <div class="card-body">
+                                        <p><strong>IP:</strong> {{ fw.ip }}</p>
+                                        <p><strong>Node:</strong> {{ fw.node }}</p>
+
+                                        <hr>
+
+                                        <p>
+                                            <strong>CPU Used:</strong>
+                                            <span class="
+                                    {% if fw.cpu_used_percent > 80 %}
+                                        text-danger
+                                    {% elif fw.cpu_used_percent > 60 %}
+                                        text-warning
+                                    {% else %}
+                                        text-success
+                                    {% endif %}
+                                ">
+                                    {{ fw.cpu_used_percent }}%
+                                </span>
+                                        </p>
+
+                                        <p>
+                                            <strong>Memory Used:</strong>
+                                            <span class="
+                                    {% if fw.memory_used_percent > 80 %}
+                                        text-danger
+                                    {% elif fw.memory_used_percent > 60 %}
+                                        text-warning
+                                    {% else %}
+                                        text-success
+                                    {% endif %}
+                                ">
+                                    {{ fw.memory_used_percent }}%
+                                </span>
+                                        </p>
+
+                                        <hr>
+
+                                        <p>
+                                            <strong>Sessions:</strong><br>
+                                            Active: {{ fw.active_sessions }}<br>
+                                            Max: {{ fw.max_sessions }}
+                                        </p>
+
+                                        <div class="progress">
+                                            {% widthratio fw.active_sessions fw.max_sessions 100 as session_percent %}
+                                            <div class="progress-bar
+                                    {% if session_percent > 80 %}
+                                        bg-danger
+                                    {% elif session_percent > 60 %}
+                                        bg-warning
+                                    {% else %}
+                                        bg-success
+                                    {% endif %}
+                                " style="width: {{ session_percent }}%">
+                                                {{ session_percent }}%
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FOOTER -->
+                                    <div class="card-footer text-center">
+                                        {% if fw.role == "primary" %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Standby</span>
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning">
+                        {{ fw_error }}
                     </div>
                 {% endif %}
             </div>

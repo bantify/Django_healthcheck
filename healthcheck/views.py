@@ -26,6 +26,7 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
     VCENTER_DIR = Path("/var/log/healthcheck/vcenter")
     VM_DIR = Path("/var/log/healthcheck/vms")
     SAN_SWITCH_DIR = Path("/var/log/healthcheck/san")
+    FW_DIR = Path("/var/log/healthcheck/fw")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -260,5 +261,26 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
             context["vm_error"] = "Invalid VM health JSON format."
         except Exception as e:
             context["vm_error"] = str(e)
+
+        # ================= FIREWALL =================
+        fw_filename = f"fw_health_{date_part}_{hour_part}.json"
+        fw_file_path = self.FW_DIR / fw_filename
+
+        context["fw_file"] = fw_filename
+        context["fw_data"] = []
+        context["fw_file_exists"] = False
+        context["fw_error"] = None
+
+        try:
+            if fw_file_path.exists():
+                with open(fw_file_path, "r") as f:
+                    context["fw_data"] = json.load(f)
+                context["fw_file_exists"] = True
+            else:
+                context["fw_error"] = "Firewall health file not found."
+        except json.JSONDecodeError:
+            context["fw_error"] = "Invalid Firewall JSON format."
+        except Exception as e:
+            context["fw_error"] = str(e)
 
         return context
