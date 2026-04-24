@@ -140,7 +140,7 @@
                                             | Unbound: {{ s.unbound_disks }}</p>
                                             
                                             <p class="{% if s.ok_pools != s.total_pools %}text-danger{% endif %}">
-                                                <strong>Pools:</strong> {{ s.ok_pools }}/{{ s.total_pools }}
+                                                <strong>Pools(Ok/Total):</strong> {{ s.ok_pools }}/{{ s.total_pools }}
                                                 {% if s.ok_pools != s.total_pools %}
                                                     <span class="blink-flag">🚩 🚩</span>
                                                 {% endif %}
@@ -165,21 +165,21 @@
                                                 SPB {{ s.cpu_utilization.spb }}%
                                             </p>
                                             <p class="{% if s.ok_service_processors != s.total_service_processors %}text-danger{% endif %}">
-                                                <strong>SP:</strong>
+                                                <strong>SP(Ok/Total):</strong>
                                                 {{ s.ok_service_processors }}/{{ s.total_service_processors }}
                                                 {% if s.ok_service_processors != s.total_service_processors %}
                                                     <span class="blink-flag">🚩🚩</span>
                                                 {% endif %}
                                             </p>
                                             <p class="{% if s.ok_disks != s.total_disks %}text-danger{% endif %}">
-                                                <strong>Disks:</strong>
+                                                <strong>Disks(Ok/Total):</strong>
                                                 {{ s.ok_disks }}/{{ s.total_disks }}
                                                 {% if s.ok_disks != s.total_disks %}
                                                     <span class="blink-flag">🚩🚩</span>
                                                 {% endif %}
                                             </p>
                                             <p class="{% if s.ok_iomodules != s.total_iomodules %}text-danger{% endif %}">
-                                                <strong>IOM:</strong>
+                                                <strong>IOM(Ok/Total):</strong>
                                                 {{ s.ok_iomodules }}/{{ s.total_iomodules }}
                                                 {% if s.ok_iomodules != s.total_iomodules %}
                                                     <span class="blink-flag">🚩🚩</span>
@@ -222,23 +222,17 @@
                                             <h6>Management</h6>
                                             <p><strong>IP:</strong> {{ s.host }}</p>
 
-                                            <hr>
-
                                             <!-- Nodes -->
                                             <h6>Nodes</h6>
                                             <p><strong>Total:</strong> {{ s.total_nodes }}</p>
                                             <p><strong>OK:</strong> {{ s.ok_nodes }}</p>
                                             <p><strong>Not OK:</strong> {{ s.not_ok_nodes }}</p>
 
-                                            <hr>
-
                                             <!-- Disks -->
                                             <h6>Disks</h6>
-                                            <p><strong>Total:</strong> {{ s.total_disks }}</p>
-                                            <p><strong>OK:</strong> {{ s.ok_disks }}</p>
-                                            <p><strong>Not OK:</strong> {{ s.not_ok_disks }}</p>
-
-                                            <hr>
+                                            <p><strong>Total:</strong> {{ s.total_disks }}
+                                            <strong>| OK:</strong> {{ s.ok_disks }}
+                                            <strong>| Not OK:</strong> {{ s.not_ok_disks }}</p>
 
                                             <!-- Alerts -->
                                             <h6>Alerts</h6>
@@ -250,15 +244,13 @@
                                                 <li>Informational: {{ s.informational_alerts }}</li>
                                             </ul>
 
-                                            <hr>
-
                                             <!-- ✅ STORAGE UTILIZATION (DISK CAPACITY) -->
                                             <h6>Disk Capacity</h6>
                                             {% for tier, d in s.disk.items %}
                                                 <p class="mb-1">
                                                     <strong>{{ tier }}</strong><br>
                                                 <p class="{% if d.normal_count != d.total_disks %}text-danger{% endif %}">
-                                                    <strong>Disks:</strong>
+                                                    <strong>Disks(Ok/Total):</strong>
                                                     {{ d.normal_count }}/{{ d.total_disks }}
                                                     {% if d.normal_count != d.total_disks %}
                                                         <span class="blink-flag">🚩🚩</span>
