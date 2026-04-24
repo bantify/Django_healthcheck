@@ -129,15 +129,15 @@
                                             <p><strong>SPA:</strong> {{ s.spa_ip }} ({{ s.spa_status }})
                                             <strong> SPB:</strong> {{ s.spb_ip }} ({{ s.spb_status }})</p>
                                             
-                                            <p><strong>Disks:</strong> {{ s.ok_disks }}/{{ s.total_disks }}</p>
+                                            <p><strong>Disks(ok/total):</strong> {{ s.ok_disks }}/{{ s.total_disks }}</p>
                                             <p class="{% if s.failed_disks != 0 %}text-danger{% endif %}">
                                                 <strong>Failed:</strong> {{ s.failed_disks }}
                                                 {% if s.failed_disks != 0 %}
                                                     <span class="blink-flag">🚩 🚩</span>
                                                 {% endif %}
-                                            </p>
-                                            <p>Bound: {{ s.bound_disks }}</p>
-                                            <p>Unbound: {{ s.unbound_disks }}</p>
+                                            
+                                            | Bound: {{ s.bound_disks }}
+                                            | Unbound: {{ s.unbound_disks }}</p>
                                             
                                             <p class="{% if s.ok_pools != s.total_pools %}text-danger{% endif %}">
                                                 <strong>Pools:</strong> {{ s.ok_pools }}/{{ s.total_pools }}
