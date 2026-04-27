@@ -221,7 +221,6 @@
                                             </p>
                                             <!-- ================= POOL TABLE ================= -->
                                             {% if s.pool_table %}
-                                                <h6>Storage Pools</h6>
                                                 <div class="table-responsive mt-2">
                                                     <table class="table table-sm table-bordered">
                                                         <thead>
@@ -229,9 +228,7 @@
                                                             <th>Pool</th>
                                                             <th>RAID</th>
                                                             <th>Total (GB)</th>
-                                                            <th>Used (GB)</th>
-                                                            <th>Free (GB)</th>
-                                                            <th>Subscription</th>
+                                                            <th>Free %</th>
                                                             <th>Drives</th>
                                                             <th>Health</th>
                                                         </tr>
@@ -239,15 +236,26 @@
 
                                                         <tbody>
                                                         {% for p in s.pool_table %}
-                                                            <tr class="{% if 'OK' not in p.health %}text-danger{% endif %}">
+                                                            <tr>
                                                                 <td>{{ p.pool_name }}</td>
                                                                 <td>{{ p.raid }}</td>
                                                                 <td>{{ p.total_usable_gb }}</td>
-                                                                <td>{{ p.used_gb }}</td>
-                                                                <td>{{ p.free_gb }}</td>
-                                                                <td>{{ p.subscription_percent }}</td>
+
+                                                                {# Free % calculation #}
+                                                                <td>
+                                                                    {% if p.total_usable_gb and p.free_gb is not none %}
+                                                                        {{ ((p.free_gb / p.total_usable_gb) * 100) | round(2) }}
+                                                                        %
+                                                                    {% else %}
+                                                                        -
+                                                                    {% endif %}
+                                                                </td>
+
                                                                 <td>{{ p.drives }}</td>
-                                                                <td>{{ p.health }}</td>
+
+                                                                <td class="{% if 'OK' not in p.health %}text-danger{% endif %}">
+                                                                    {{ p.health }}
+                                                                </td>
                                                             </tr>
                                                         {% endfor %}
                                                         </tbody>
