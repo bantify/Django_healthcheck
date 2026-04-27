@@ -243,7 +243,7 @@
 
                                                                 {# Free % calculation #}
                                                                 <td>
-                                                                    {{ p.free_gb|percent:p.total_usable_gb }}
+                                                                    {{ (p.free_gb|float / p.total_usable_gb|float) * 100|floatformat:2 }}
                                                                 </td>
 
                                                                 <td>{{ p.drives }}</td>
