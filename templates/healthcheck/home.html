@@ -243,9 +243,11 @@
 
                                                                 {# Free % calculation #}
                                                                 <td>
-                                                                    {% if p.total_usable_gb and p.free_gb is not none %}
-                                                                        {{ ((p.free_gb / p.total_usable_gb) * 100) | round(2) }}
-                                                                        %
+                                                                    {% set total = p.total_usable_gb|float %}
+                                                                    {% set free = p.free_gb|float %}
+
+                                                                    {% if total > 0 %}
+                                                                        {{ ((free / total) * 100) | round(2) }}%
                                                                     {% else %}
                                                                         -
                                                                     {% endif %}
