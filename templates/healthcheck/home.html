@@ -382,50 +382,6 @@
                                             </div>
                                             <hr>
 
-                                            <!-- ================= CPG UTILIZATION ================= -->
-                                            <h6>CPG Utilization</h6>
-
-                                            <div class="table-responsive">
-                                                <table class="table table-sm table-bordered">
-                                                    <thead class="table-light">
-                                                    <tr>
-                                                        <th>CPG Name</th>
-                                                        <th>Total (MiB)</th>
-                                                        <th>Free (MiB)</th>
-                                                        <th>Free %</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    {% for cpg_name, cpg in s.cpg.items %}
-                                                        <tr>
-                                                            <td><strong>{{ cpg_name }}</strong></td>
-                                                            <td>{{ cpg.total_mib }}</td>
-                                                            <td>{{ cpg.free_mib }}</td>
-                                                            <td>
-                                                                <div class="progress" style="height: 16px;">
-                                                                    <div class="progress-bar
-                            {% if cpg.free_percent < 5 %}
-                                bg-danger
-                            {% elif cpg.free_percent < 15 %}
-                                bg-warning
-                            {% else %}
-                                bg-success
-                            {% endif %}
-                        "
-                                                                         role="progressbar"
-                                                                         style="width: {{ cpg.free_percent }}%;"
-                                                                         aria-valuenow="{{ cpg.free_percent }}"
-                                                                         aria-valuemin="0"
-                                                                         aria-valuemax="100">
-                                                                        {{ cpg.free_percent }}%
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    {% endfor %}
-                                                    </tbody>
-                                                </table>
-                                            </div>
                                         </div>
 
                                         <!-- FOOTER -->
