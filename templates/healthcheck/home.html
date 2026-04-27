@@ -242,16 +242,13 @@
                                                                 <td>{{ p.total_usable_gb }}</td>
 
                                                                 {# Free % calculation #}
-                                                                <td>
-                                                                    {% set total = p.total_usable_gb|float %}
-                                                                    {% set free = p.free_gb|float %}
-
-                                                                    {% if total > 0 %}
-                                                                        {{ ((free / total) * 100) | round(2) }}%
-                                                                    {% else %}
-                                                                        -
-                                                                    {% endif %}
-                                                                </td>
+<td>
+    {% if p.total_usable_gb and p.free_gb %}
+        {{ ((p.free_gb|float / p.total_usable_gb|float) * 100) | round(2) }}%
+    {% else %}
+        -
+    {% endif %}
+</td>
 
                                                                 <td>{{ p.drives }}</td>
 
