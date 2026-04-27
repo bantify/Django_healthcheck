@@ -29,3 +29,10 @@ def percent(free, total):
         return round((free / total) * 100, 2)
     except:
         return "0"
+
+@register.filter
+def subtract(value, arg):
+    try:
+        return float(value) - float(arg)
+    except:
+        return 0
