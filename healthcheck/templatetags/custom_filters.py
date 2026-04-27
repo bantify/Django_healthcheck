@@ -15,7 +15,7 @@ def free_percent(free, total):
         total = total or 0
         if total == 0:
             return 0
-        return (free / total) * 100
+        return round((free / total) * 100,2)
     except:
         return 0
 
@@ -33,6 +33,6 @@ def percent(free, total):
 @register.filter
 def subtract(value, arg):
     try:
-        return float(value) - float(arg)
+        return round(100 - float(value), 2)
     except:
         return 0
