@@ -147,34 +147,37 @@
                                                 {% endif %}
                                             </p>
                                             {% if s.pool_details %}
-                                                <table class="table table-sm table-bordered mt-2">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>Pool</th>
-                                                        <th>RAID</th>
-                                                        <th>Total GB</th>
-                                                        <th>Used GB</th>
-                                                        <th>Free GB</th>
-                                                        <th>% Full</th>
-                                                        <th>Status</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    {% for p in s.pool_details %}
+                                                <h6>Storage Pools</h6>
+                                                <div class="table-responsive mt-2">
+                                                    <table class="table table-sm table-bordered mt-2">
+                                                        <thead>
                                                         <tr>
-                                                            <td>{{ p.pool_name }}</td>
-                                                            <td>{{ p.raid }}</td>
-                                                            <td>{{ p.total_usable_gb }}</td>
-                                                            <td>{{ p.used_gb }}</td>
-                                                            <td>{{ p.free_gb }}</td>
-                                                            <td>{{ p.percent_full }}</td>
-                                                            <td class="{% if p.state != 'Ready' %}text-danger{% endif %}">
-                                                                {{ p.state }}
-                                                            </td>
+                                                            <th>Pool</th>
+                                                            <th>RAID</th>
+                                                            <th>Total GB</th>
+                                                            <th>Used GB</th>
+                                                            <th>Free GB</th>
+                                                            <th>% Full</th>
+                                                            <th>Status</th>
                                                         </tr>
-                                                    {% endfor %}
-                                                    </tbody>
-                                                </table>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for p in s.pool_details %}
+                                                            <tr>
+                                                                <td>{{ p.pool_name }}</td>
+                                                                <td>{{ p.raid }}</td>
+                                                                <td>{{ p.total_usable_gb }}</td>
+                                                                <td>{{ p.used_gb }}</td>
+                                                                <td>{{ p.free_gb }}</td>
+                                                                <td>{{ p.percent_full }}</td>
+                                                                <td class="{% if p.state != 'Ready' %}text-danger{% endif %}">
+                                                                    {{ p.state }}
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             {% endif %}
 
                                         </div>
@@ -218,38 +221,38 @@
                                             </p>
                                             <!-- ================= POOL TABLE ================= -->
                                             {% if s.pool_table %}
-                                                <hr>
                                                 <h6>Storage Pools</h6>
-
-                                                <table class="table table-sm table-bordered">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>Pool</th>
-                                                        <th>RAID</th>
-                                                        <th>Total (GB)</th>
-                                                        <th>Used (GB)</th>
-                                                        <th>Free (GB)</th>
-                                                        <th>Subscription</th>
-                                                        <th>Drives</th>
-                                                        <th>Health</th>
-                                                    </tr>
-                                                    </thead>
-
-                                                    <tbody>
-                                                    {% for p in s.pool_table %}
-                                                        <tr class="{% if 'OK' not in p.health %}text-danger{% endif %}">
-                                                            <td>{{ p.pool_name }}</td>
-                                                            <td>{{ p.raid }}</td>
-                                                            <td>{{ p.total_usable_gb }}</td>
-                                                            <td>{{ p.used_gb }}</td>
-                                                            <td>{{ p.free_gb }}</td>
-                                                            <td>{{ p.subscription_percent }}</td>
-                                                            <td>{{ p.drives }}</td>
-                                                            <td>{{ p.health }}</td>
+                                                <div class="table-responsive mt-2">
+                                                    <table class="table table-sm table-bordered">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Pool</th>
+                                                            <th>RAID</th>
+                                                            <th>Total (GB)</th>
+                                                            <th>Used (GB)</th>
+                                                            <th>Free (GB)</th>
+                                                            <th>Subscription</th>
+                                                            <th>Drives</th>
+                                                            <th>Health</th>
                                                         </tr>
-                                                    {% endfor %}
-                                                    </tbody>
-                                                </table>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        {% for p in s.pool_table %}
+                                                            <tr class="{% if 'OK' not in p.health %}text-danger{% endif %}">
+                                                                <td>{{ p.pool_name }}</td>
+                                                                <td>{{ p.raid }}</td>
+                                                                <td>{{ p.total_usable_gb }}</td>
+                                                                <td>{{ p.used_gb }}</td>
+                                                                <td>{{ p.free_gb }}</td>
+                                                                <td>{{ p.subscription_percent }}</td>
+                                                                <td>{{ p.drives }}</td>
+                                                                <td>{{ p.health }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             {% endif %}
                                         </div>
                                     </div>
