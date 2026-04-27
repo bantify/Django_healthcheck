@@ -169,7 +169,7 @@
 {#                                                                <td>{{ p.used_gb }}</td>#}
 {#                                                                <td>{{ p.free_gb }}</td>#}
 {#                                                                <td>{{ p.percent_full }}</td>#}
-                                                                <td>{{ 100|subtract:p.percent_full }}</td>
+                                                                <td>{{ p.percent_full|subtract_100 }}</td>
                                                                 <td class="{% if p.state != 'Ready' %}text-danger{% endif %}">
                                                                     {{ p.state }}
                                                                 </td>

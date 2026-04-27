@@ -31,7 +31,7 @@ def percent(free, total):
         return "0"
 
 @register.filter
-def subtract(value, arg):
+def subtract_100(value):
     try:
         return round(100 - float(value), 2)
     except:
