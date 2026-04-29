@@ -137,7 +137,7 @@ EMAIL_HOST = '172.16.7.183'
 #EMAIL_USE_TLS = True
 #EMAIL_USE_SSL = False
 
-DEFAULT_FROM_EMAIL = 'HealthCheck <no-reply@qvantel.com>'
+DEFAULT_FROM_EMAIL = 'HealthCheck <no-reply@banglalink.net>'
 
 # settings.py
 PASSWORD_RESET_EMAIL_SUBJECT = "Qvantel HealthCheck – Password Reset"
