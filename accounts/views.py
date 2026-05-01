@@ -96,6 +96,7 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     form_class = CustomSetPasswordForm
     success_url = reverse_lazy("login")
 
+
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(
