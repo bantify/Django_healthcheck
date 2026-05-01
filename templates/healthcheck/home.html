@@ -169,21 +169,23 @@
                                                                 {#                                                                <td>{{ p.used_gb }}</td>#}
                                                                 {#                                                                <td>{{ p.free_gb }}</td>#}
                                                                 {#                                                                <td>{{ p.percent_full }}</td>#}
-                                                                <td>
-                                                                    {% if p.percent_full < 10 %}
-                                                                        <span class="badge bg-danger">
-                                                                             {{ p.percent_full|subtract_100 }}
-                                                                        </span>
-                                                                    {% elif p.percent_full < 30 %}
-                                                                        <span class="badge bg-warning text-dark">
-                                                                           {{ p.percent_full|subtract_100 }}
-                                                                        </span>
-                                                                    {% else %}
-                                                                        <span class="badge bg-success">
-                                                                            {{ p.percent_full|subtract_100 }}
-                                                                        </span>
-                                                                    {% endif %}
-                                                                </td>
+                                                                {% with value=p.percent_full|subtract_100 %}
+                                                                    <td>
+                                                                        {% if value < 10 %}
+                                                                            <span class="badge bg-danger">
+                                                                                {{ value }}
+                                                                            </span>
+                                                                        {% elif value < 30 %}
+                                                                            <span class="badge bg-warning text-dark">
+                                                                                {{ value }}
+                                                                            </span>
+                                                                        {% else %}
+                                                                            <span class="badge bg-success">
+                                                                                {{ value }}
+                                                                            </span>
+                                                                        {% endif %}
+                                                                    </td>
+                                                                {% endwith %}
                                                                 <td class="{% if p.state != 'Ready' %}text-danger{% endif %}">
                                                                     {{ p.state }}
                                                                 </td>
