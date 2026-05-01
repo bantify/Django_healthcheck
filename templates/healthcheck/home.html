@@ -166,10 +166,24 @@
                                                                 <td>{{ p.pool_name }}</td>
                                                                 <td>{{ p.raid }}</td>
                                                                 <td>{{ p.total_usable_gb }}</td>
-{#                                                                <td>{{ p.used_gb }}</td>#}
-{#                                                                <td>{{ p.free_gb }}</td>#}
-{#                                                                <td>{{ p.percent_full }}</td>#}
-                                                                <td>{{ p.percent_full|subtract_100 }}</td>
+                                                                {#                                                                <td>{{ p.used_gb }}</td>#}
+                                                                {#                                                                <td>{{ p.free_gb }}</td>#}
+                                                                {#                                                                <td>{{ p.percent_full }}</td>#}
+                                                                <td>
+                                                                    {% if p.percent_full < 10 %}
+                                                                        <span class="badge bg-danger">
+                                                                             {{ p.percent_full|subtract_100 }}
+                                                                        </span>
+                                                                    {% elif p.percent_full < 30 %}
+                                                                        <span class="badge bg-warning text-dark">
+                                                                           {{ p.percent_full|subtract_100 }}
+                                                                        </span>
+                                                                    {% else %}
+                                                                        <span class="badge bg-success">
+                                                                            {{ p.percent_full|subtract_100 }}
+                                                                        </span>
+                                                                    {% endif %}
+                                                                </td>
                                                                 <td class="{% if p.state != 'Ready' %}text-danger{% endif %}">
                                                                     {{ p.state }}
                                                                 </td>
