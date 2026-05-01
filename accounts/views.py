@@ -53,12 +53,16 @@ class CustomPasswordResetView(PasswordResetView):
 
     email_template_name = "registration/password_reset_email.txt"
     html_email_template_name = "registration/password_reset_email.html"
+    subject_template_name = "registration/password_reset_subject.txt"
 
     def form_valid(self, form):
         try:
             form.save(
                 request=self.request,
-                use_https=self.request.is_secure())
+                use_https=self.request.is_secure(),
+                email_template_name = self.email_template_name,
+                html_email_template_name = self.html_email_template_name,
+                subject_template_name = self.subject_template_name)
 
             # ✅ Only shown if email sending REALLY succeeded
             messages.success(
