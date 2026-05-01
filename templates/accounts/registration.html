@@ -35,11 +35,11 @@
                         <div class="mb-3">
                             <label class="form-label">Mobile Number</label>
                             <input
-                                type="tel"
-                                name="mobile"
-                                class="form-control {% if form.mobile.errors %}is-invalid{% endif %}"
-                                placeholder="e.g. 017XXXXXXXX"
-                                value="{{ form.mobile.value|default_if_none:'' }}">
+                                    type="tel"
+                                    name="mobile"
+                                    class="form-control {% if form.mobile.errors %}is-invalid{% endif %}"
+                                    placeholder="e.g. 017XXXXXXXX"
+                                    value="{{ form.mobile.value|default_if_none:'' }}">
 
                             {% for error in form.mobile.errors %}
                                 <div class="invalid-feedback d-block">
@@ -52,11 +52,11 @@
                         <div class="mb-3">
                             <label class="form-label">Email</label>
                             <input
-                                type="email"
-                                name="email"
-                                class="form-control {% if form.email.errors %}is-invalid{% endif %}"
-                                placeholder="Enter email"
-                                value="{{ form.email.value|default_if_none:'' }}">
+                                    type="email"
+                                    name="email"
+                                    class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                                    placeholder="Enter email"
+                                    value="{{ form.email.value|default_if_none:'' }}">
 
                             {% for error in form.email.errors %}
                                 <div class="invalid-feedback d-block">
@@ -69,9 +69,9 @@
                         <div class="mb-3">
                             <label class="form-label">Password</label>
                             <input
-                                type="password"
-                                name="password1"
-                                class="form-control {% if form.password1.errors %}is-invalid{% endif %}">
+                                    type="password"
+                                    name="password1"
+                                    class="form-control {% if form.password1.errors %}is-invalid{% endif %}">
 
                             {% for error in form.password1.errors %}
                                 <div class="invalid-feedback d-block">
@@ -84,9 +84,9 @@
                         <div class="mb-3">
                             <label class="form-label">Confirm Password</label>
                             <input
-                                type="password"
-                                name="password2"
-                                class="form-control {% if form.password2.errors %}is-invalid{% endif %}">
+                                    type="password"
+                                    name="password2"
+                                    class="form-control {% if form.password2.errors %}is-invalid{% endif %}">
 
                             {% for error in form.password2.errors %}
                                 <div class="invalid-feedback d-block">
@@ -115,6 +115,7 @@
         </div>
     </div>
 </div>
-
+<!-- Bootstrap JS -->
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
