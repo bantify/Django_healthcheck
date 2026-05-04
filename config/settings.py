@@ -144,4 +144,7 @@ PASSWORD_RESET_EMAIL_SUBJECT = "Qvantel HealthCheck – Password Reset"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# settings.py
+SESSION_COOKIE_AGE = 15 * 60   # 15 minutes
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_SAVE_EVERY_REQUEST = False
