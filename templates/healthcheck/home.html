@@ -527,8 +527,7 @@
                                                 {% endif %}
                                             {% else %}
                                                 <p>
-                                                    <strong>Memory Utilization:</strong>  {{ 100|add:-sw.memory }}%%
-                                                   
+                                                    <strong>Memory Utilization:</strong> {{ 100|subtract:sw.memory }}%
                                                 </p>
                                             {% endif %}
 
