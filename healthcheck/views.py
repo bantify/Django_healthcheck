@@ -292,27 +292,17 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
 
 
 class GenerateHealthCheckPDFView(GenerateHealthCheckReportView):
-    """
-    Reuses the dashboard context, but renders it as a PDF
-    """
+    template_name = "healthcheck/healthcheck_pdf.html"
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
-        context["pdf"] = True   # 🔑 KEY FLAG
-
-        html = render_to_string(
-            self.template_name,
-            context,
-            request=request
-        )
+        html = render_to_string(self.template_name, context, request=request)
 
         pdf = HTML(
             string=html,
             base_url=request.build_absolute_uri("/")
         ).write_pdf()
 
-        filename = f"health_check_{context['selected_date']}_{context['selected_hour']}.pdf"
-
         response = HttpResponse(pdf, content_type="application/pdf")
-        response["Content-Disposition"] = f'inline; filename="{filename}"'
+        response["Content-Disposition"] = "inline; filename=healthcheck.pdf"
         return response

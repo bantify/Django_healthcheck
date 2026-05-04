@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block title %}Health Check Report{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- ================= COVER ================= -->
+    <h1 class="text-center mb-2">Health Check Report</h1>
+    <p class="text-center text-muted mb-4">
+        Generated for <strong>{{ selected_date }} {{ selected_hour }}:00</strong>
+    </p>
+
+    <hr>
+
+    <!-- ================= STORAGE ================= -->
+    <h3>Storage Health</h3>
+    <hr>
+
+    {% if storage_file_exists %}
+        {% for s in storage_data %}
+            <div class="card mb-3">
+                <div class="card-header bg-success text-white">
+                    {{ s.hostname }} <span class="float-end">{{ s.type|upper }}</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>IP:</strong> {{ s.host|default:"N/A" }}</p>
+
+                    {% if s.type == "vnx" %}
+                        <p><strong>Disks:</strong> {{ s.ok_disks }}/{{ s.total_disks }}</p>
+                        <p><strong>Pools:</strong> {{ s.ok_pools }}/{{ s.total_pools }}</p>
+                    {% endif %}
+
+                    {% if s.type == "unity" %}
+                        <p><strong>CPU:</strong>
+                            SPA {{ s.cpu_utilization.spa }}% /
+                            SPB {{ s.cpu_utilization.spb }}%
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-danger">Storage health file not found.</p>
+    {% endif %}
+
+    <div style="page-break-before: always;"></div>
+
+    <!-- ================= SWITCH ================= -->
+    <h3>Switch Health</h3>
+    <hr>
+
+    {% if switch_file_exists %}
+        {% regroup switch_data by vendor as vendor_groups %}
+
+        {% for group in vendor_groups %}
+            <h4 class="mt-3">{{ group.grouper|upper }} Switches</h4>
+
+            {% for sw in group.list %}
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        {{ sw.device_name }}
+                        <span class="float-end">{{ sw.vendor|upper }}</span>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>IP:</strong> {{ sw.device_ip }}</p>
+
+                        {% if sw.vendor == "hp" %}
+                            <p><strong>CPU:</strong>
+                                Slot‑1 {{ sw.cpu.slot_1|default:"0" }}% /
+                                Slot‑2 {{ sw.cpu.slot_2|default:"0" }}%
+                            </p>
+                            <p><strong>Memory:</strong>
+                                {{ sw.memory.slot_1 }}% /
+                                {{ sw.memory.slot_2 }}%
+                            </p>
+                        {% else %}
+                            <p><strong>CPU:</strong> {{ sw.cpu }}%</p>
+                            <p><strong>Free Memory:</strong> {{ sw.free_memory }}%</p>
+                        {% endif %}
+
+                        <p><strong>Fans:</strong>
+                            {{ sw.fan.normal }}/{{ sw.fan.total }}
+                        </p>
+
+                        <p><strong>Power:</strong>
+                            {{ sw.power.normal }}/{{ sw.power.total }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+
+    <div style="page-break-before: always;"></div>
+
+    <!-- ================= ONEVIEW ================= -->
+    <h3>OneView Health</h3>
+    <hr>
+
+    {% if oneview_file_exists %}
+        {% for ov in oneview_data %}
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    {{ ov.oneview_name }}
+                    <span class="float-end">{{ ov.oneview_ip }}</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Enclosures OK:</strong> {{ ov.enclosures_summary.OK }}</p>
+                    <p><strong>Servers OK:</strong> {{ ov.servers_summary.OK }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div style="page-break-before: always;"></div>
+
+    <!-- ================= VMs ================= -->
+    <h3>Virtual Machines</h3>
+    <hr>
+
+    {% if vm_file_exists %}
+        {% for vm in vm_data %}
+            <div class="card mb-3">
+                <div class="card-header
+                    {% if vm.health_status == 'critical' %}
+                        bg-danger
+                    {% elif vm.health_status == 'warning' %}
+                        bg-warning
+                    {% else %}
+                        bg-success
+                    {% endif %}
+                    text-white">
+                    {{ vm.name }} <span class="float-end">{{ vm.ip }}</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>CPU:</strong> {{ vm.cpu_used_percent }}%</p>
+                    <p><strong>Memory:</strong> {{ vm.memory_used_percent }}%</p>
+                    <p><strong>Max FS Used:</strong> {{ vm.max_fs_used_percent }}%</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+</div>
+{% endblock %}
