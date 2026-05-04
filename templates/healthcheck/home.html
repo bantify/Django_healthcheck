@@ -439,6 +439,9 @@
             <!-- ================================================= -->
             <!-- SWITCH TAB (HPE CPU INFO ADDED ✅)               -->
             <!-- ================================================= -->
+            <!-- ================================================= -->
+            <!-- SWITCH TAB                                       -->
+            <!-- ================================================= -->
             <div class="tab-pane fade" id="switch" role="tabpanel">
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -448,74 +451,130 @@
                 <hr class="mb-4">
 
                 {% if switch_file_exists %}
-                    <div class="row g-4">
-                        {% for sw in switch_data %}
-                            <div class="col-xl-3 col-lg-4 col-md-6">
-                                <div class="card h-100
-                        {% if sw.status != 'reachable' %}border-danger{% else %}border-success{% endif %}
+
+                    {% regroup switch_data by vendor as vendor_groups %}
+
+                    {% for group in vendor_groups %}
+                        <h5 class="mb-3 mt-4 text-uppercase">
+                            {{ group.grouper }} Switches
+                        </h5>
+
+                        <div class="row g-4">
+                            {% for sw in group.list %}
+                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                    <div class="card h-100
+                    {% if sw.status != 'reachable' %}
+                        border-danger
+                    {% else %}
+                        border-success
+                    {% endif %}
+                ">
+                                        <div class="card-header
+                        {% if sw.status != 'reachable' %}
+                            bg-danger
+                        {% else %}
+                            bg-success
+                        {% endif %}
+                        text-white
                     ">
-                                    <div class="card-header
-                            {% if sw.status != 'reachable' %}bg-danger{% else %}bg-success{% endif %}
-                            text-white">
-                                        {{ sw.device_name }}
-                                        <span class="badge bg-dark float-end">{{ sw.vendor|upper }}</span>
-                                    </div>
+                                            {{ sw.device_name }}
+                                            <span class="badge bg-dark float-end">
+                            {{ sw.vendor|upper }}
+                        </span>
+                                        </div>
 
-                                    <div class="card-body">
-                                        <p><strong>IP:</strong> {{ sw.device_ip }}</p>
-                                        <p><strong>Status:</strong>
-                                            {% if sw.status == "reachable" %}Reachable{% else %}Unreachable{% endif %}
-                                        </p>
+                                        <div class="card-body">
 
-                                        <!-- ✅ HPE CPU INFO -->
-                                        {% if sw.cpu %}
-                                            <p><strong>CPU:</strong>
-                                                Slot‑1 {{ sw.cpu.slot_1|default:"0" }}% /
-                                                Slot‑2 {{ sw.cpu.slot_2|default:"0" }}%
-                                            </p>
-                                        {% endif %}
-
-                                        {% if sw.free_memory %}
-                                            <p><strong>Free Memory:</strong>
-                                                {{ sw.free_memory.slot_1 }}% /
-                                                {{ sw.free_memory.slot_2 }}%
-                                            </p>
-                                        {% endif %}
-
-                                        {% if sw.fan %}
-                                            <p class="{% if sw.fan.normal != sw.fan.total %}text-danger{% endif %}">
-                                                <strong>Fans:</strong>
-                                                Total: {{ sw.fan.total }},
-                                                Normal: {{ sw.fan.normal }}
-                                                {% if sw.fan.normal != sw.fan.total %}
-                                                    <span class="blink-flag">🚩🚩</span>
+                                            <p><strong>IP:</strong> {{ sw.device_ip }}</p>
+                                            <p>
+                                                <strong>Status:</strong>
+                                                {% if sw.status == "reachable" %}
+                                                    Reachable
+                                                {% else %}
+                                                    Unreachable
                                                 {% endif %}
                                             </p>
-                                        {% endif %}
 
-                                        {% if sw.power %}
-                                            <p class="{% if sw.power.normal != sw.power.total %}text-danger{% endif %}">
-                                                <strong>Power:</strong>
-                                                Total: {{ sw.power.total }},
-                                                Normal: {{ sw.power.normal }}
-                                                {% if sw.power.normal != sw.power.total %}
-                                                    <span class="blink-flag">🚩🚩</span>
+                                            <!-- ========================== -->
+                                            <!-- CPU -->
+                                            <!-- ========================== -->
+                                            {% if sw.vendor == "hp" %}
+                                                {% if sw.cpu %}
+                                                    <p>
+                                                        <strong>CPU:</strong>
+                                                        Slot‑1 {{ sw.cpu.slot_1|default:"0" }}%
+                                                        /
+                                                        Slot‑2 {{ sw.cpu.slot_2|default:"0" }}%
+                                                    </p>
                                                 {% endif %}
-                                            </p>
-                                        {% endif %}
+                                            {% else %}
+                                                <p>
+                                                    <strong>CPU:</strong> {{ sw.cpu }}%
+                                                </p>
+                                            {% endif %}
 
-                                        {% if sw.error %}
-                                            <p class="text-danger">{{ sw.error }}</p>
-                                        {% endif %}
+                                            <!-- ========================== -->
+                                            <!-- MEMORY -->
+                                            <!-- ========================== -->
+                                            {% if sw.vendor == "hp" %}
+                                                {% if sw.memory %}
+                                                    <p>
+                                                        <strong>Memory:</strong>
+                                                        Slot‑1 {{ sw.memory.slot_1 }}%
+                                                        /
+                                                        Slot‑2 {{ sw.memory.slot_2 }}%
+                                                    </p>
+                                                {% endif %}
+                                            {% else %}
+                                                <p>
+                                                    <strong>Memory:</strong> {{ sw.memory }}%
+                                                </p>
+                                            {% endif %}
+
+                                            <!-- ========================== -->
+                                            <!-- FAN -->
+                                            <!-- ========================== -->
+                                            {% if sw.fan %}
+                                                <p class="{% if sw.fan.normal != sw.fan.total %}text-danger{% endif %}">
+                                                    <strong>Fans:</strong>
+                                                    {{ sw.fan.normal }}/{{ sw.fan.total }}
+                                                    {% if sw.fan.normal != sw.fan.total %}
+                                                        <span class="blink-flag">🚩🚩</span>
+                                                    {% endif %}
+                                                </p>
+                                            {% endif %}
+
+                                            <!-- ========================== -->
+                                            <!-- POWER -->
+                                            <!-- ========================== -->
+                                            {% if sw.power %}
+                                                <p class="{% if sw.power.normal != sw.power.total %}text-danger{% endif %}">
+                                                    <strong>Power:</strong>
+                                                    {{ sw.power.normal }}/{{ sw.power.total }}
+                                                    {% if sw.power.normal != sw.power.total %}
+                                                        <span class="blink-flag">🚩🚩</span>
+                                                    {% endif %}
+                                                </p>
+                                            {% endif %}
+
+                                            {% if sw.error %}
+                                                <p class="text-danger">{{ sw.error }}</p>
+                                            {% endif %}
+
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
-                    </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
                 {% else %}
-                    <div class="alert alert-warning">Switch health file not found.</div>
+                    <div class="alert alert-warning">
+                        Switch health file not found.
+                    </div>
                 {% endif %}
             </div>
+
 
             <!-- ================================================= -->
             <!-- ONEVIEW TAB                                     -->
