@@ -143,3 +143,5 @@ DEFAULT_FROM_EMAIL = 'HealthCheck <no-reply@banglalink.net>'
 PASSWORD_RESET_EMAIL_SUBJECT = "Qvantel HealthCheck – Password Reset"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
