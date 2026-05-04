@@ -501,7 +501,7 @@
                                             {% if sw.vendor == "hp" %}
                                                 {% if sw.cpu %}
                                                     <p>
-                                                        <strong>CPU:</strong>
+                                                        <strong>CPU Utilization:</strong>
                                                         Slot‑1 {{ sw.cpu.slot_1|default:"0" }}%
                                                         /
                                                         Slot‑2 {{ sw.cpu.slot_2|default:"0" }}%
@@ -509,7 +509,7 @@
                                                 {% endif %}
                                             {% else %}
                                                 <p>
-                                                    <strong>CPU:</strong> {{ sw.cpu }}%
+                                                    <strong>CPU Utilization:</strong> {{ sw.cpu }}%
                                                 </p>
                                             {% endif %}
 
@@ -527,7 +527,8 @@
                                                 {% endif %}
                                             {% else %}
                                                 <p>
-                                                    <strong>Memory:</strong> {{ sw.memory }}%
+                                                    <strong>Memory Utilization:</strong>  {{ 100|add:-sw.memory }}%%
+                                                   
                                                 </p>
                                             {% endif %}
 
