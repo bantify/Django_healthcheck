@@ -5,6 +5,10 @@ from zoneinfo import ZoneInfo
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
+from django.template.loader import render_to_string
+from weasyprint import HTML
+from django.http import HttpResponse
+
 
 
 class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
@@ -284,3 +288,31 @@ class GenerateHealthCheckReportView(LoginRequiredMixin, TemplateView):
             context["fw_error"] = str(e)
 
         return context
+
+
+
+class GenerateHealthCheckPDFView(GenerateHealthCheckReportView):
+    """
+    Reuses the dashboard context, but renders it as a PDF
+    """
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        context["pdf"] = True   # 🔑 KEY FLAG
+
+        html = render_to_string(
+            self.template_name,
+            context,
+            request=request
+        )
+
+        pdf = HTML(
+            string=html,
+            base_url=request.build_absolute_uri("/")
+        ).write_pdf()
+
+        filename = f"health_check_{context['selected_date']}_{context['selected_hour']}.pdf"
+
+        response = HttpResponse(pdf, content_type="application/pdf")
+        response["Content-Disposition"] = f'inline; filename="{filename}"'
+        return response

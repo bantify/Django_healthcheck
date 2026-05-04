@@ -1,16 +1,16 @@
 {% if storage_file_exists %}
-<div class="row g-4">
-    {% for s in storage_data %}
-        {% if s.type == "vnx" %}
-            <!-- VNX card -->
-            <!-- (paste your VNX card block here) -->
-        {% elif s.type == "unity" %}
-            <!-- UNITY card -->
-        {% elif s.type == "3par" %}
-            <!-- 3PAR card -->
-        {% endif %}
-    {% endfor %}
-</div>
+    <div class="row g-4">
+        {% for s in storage_data %}
+            {% if s.type == "vnx" %}
+                <!-- VNX card -->
+                <!-- (paste your VNX card block here) -->
+            {% elif s.type == "unity" %}
+                <!-- UNITY card -->
+            {% elif s.type == "3par" %}
+                <!-- 3PAR card -->
+            {% endif %}
+        {% endfor %}
+    </div>
 {% else %}
-<div class="alert alert-warning">{{ storage_error }}</div>
+    <div class="alert alert-warning">{{ storage_error }}</div>
 {% endif %}

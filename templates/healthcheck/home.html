@@ -36,7 +36,14 @@
                     Load
                 </button>
             </div>
+            <div>
+                <a href="{% url 'health_dashboard_pdf' %}?{{ request.GET.urlencode }}"
+                   class="btn btn-danger">
+                    Download PDF
+                </a>
+            </div>
         </form>
+
 
         {% if loaded_time %}
             <p class="text-center text-muted small mb-3">

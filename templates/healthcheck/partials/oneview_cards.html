@@ -1,7 +1,7 @@
 {% if oneview_file_exists %}
-{% for ov in oneview_data %}
-    <!-- OneView enclosure + server cards -->
-{% endfor %}
+    {% for ov in oneview_data %}
+        <!-- OneView enclosure + server cards -->
+    {% endfor %}
 {% else %}
-<div class="alert alert-warning">{{ oneview_error }}</div>
+    <div class="alert alert-warning">{{ oneview_error }}</div>
 {% endif %}

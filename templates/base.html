@@ -17,6 +17,37 @@
 
 
     {% block extra_css %}{% endblock %}
+    {% if pdf %}
+        <style>
+            /* ================= PDF MODE ================= */
+
+            .pdf-view .nav,
+            .pdf-view .nav-tabs {
+                display: none !important;
+            }
+
+            /* Show ALL tab panes */
+            .pdf-view .tab-pane {
+                display: block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+
+            /* Remove fade effects */
+            .pdf-view .fade {
+                opacity: 1 !important;
+            }
+
+            /* Better spacing in PDF */
+            .pdf-view .card {
+                page-break-inside: avoid;
+            }
+
+            .pdf-view hr {
+                page-break-after: avoid;
+            }
+        </style>
+    {% endif %}
 </head>
 
 <body class="bg-light">
