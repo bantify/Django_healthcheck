@@ -299,7 +299,7 @@
                                 </div>
                             {% endif %}
 
-                            {% if s.type == "3par" %}
+                            {% if s.type == "3par" or s.type == "ALTR" or s.type == "PRI" %}
                                 <div class="col-xl-6 col-lg-12 col-md-12">
                                     <div class="card h-100 shadow-sm
         {% if s.critical_alerts or s.not_ok_nodes or s.not_ok_disks %}
@@ -332,16 +332,16 @@
                                             <p><strong>IP:</strong> {{ s.host }}</p>
 
                                             <!-- Nodes -->
-                                            <h6>Nodes</h6>
-                                            <p><strong>Total:</strong> {{ s.total_nodes }}</p>
-                                            <p><strong>OK:</strong> {{ s.ok_nodes }}</p>
-                                            <p><strong>Not OK:</strong> {{ s.not_ok_nodes }}</p>
+                                            <h6>Nodes(Total/Ok/Not ok)</h6>
+                                            <strong>Total:</strong> {{ s.total_nodes }}
+                                            <strong>OK:</strong> {{ s.ok_nodes }}
+                                            <strong>Not OK:</strong> {{ s.not_ok_nodes }}
 
                                             <!-- Disks -->
-                                            <h6>Disks</h6>
-                                            <p><strong>Total:</strong> {{ s.total_disks }}
+                                            <h6>Disks(Total/Ok/Not ok)</h6>
+                                                <strong>Total:</strong> {{ s.total_disks }}
                                                 <strong>| OK:</strong> {{ s.ok_disks }}
-                                                <strong>| Not OK:</strong> {{ s.not_ok_disks }}</p>
+                                                <strong>| Not OK:</strong> {{ s.not_ok_disks }}
 
                                             <!-- Alerts -->
                                             <h6>Alerts</h6>
