@@ -333,9 +333,9 @@
 
                                             <!-- Nodes -->
                                             <h6>Nodes(Total/Ok/Not ok):
-                                            {{ s.total_nodes }}/
-                                            {{ s.ok_nodes }}/
-                                            {{ s.not_ok_nodes }}
+                                                {{ s.total_nodes }}/
+                                                {{ s.ok_nodes }}/
+                                                {{ s.not_ok_nodes }}
                                             </h6>
 
                                             <!-- Disks -->
@@ -352,7 +352,7 @@
                                             <h6>Fans(Total/Ok/Not ok):
                                                 {{ s.total_fan }}/
                                                 {{ s.ok_fan }}/
-                                                {{ s.not_ok_fan }}</h6>                                        
+                                                {{ s.not_ok_fan }}</h6>
                                             <!-- Alerts -->
                                             <h6>Alerts</h6>
                                             <p><strong>Total:</strong> {{ s.total_alerts }}</p>
@@ -469,126 +469,48 @@
 
                 {% if switch_file_exists %}
 
-                    {% regroup switch_data by vendor as vendor_groups %}
+                    <div class="row g-4">
+                        {% for sw in switch_data %}
 
-                    {% for group in vendor_groups %}
-{#                        <h5 class="mb-3 mt-4 text-uppercase">#}
-{#                            {{ group.grouper }} Switches#}
-{#                        </h5>#}
-
-                        <div class="row g-4">
-                            {% for sw in group.list %}
-                                <div class="col-xl-3 col-lg-4 col-md-6">
-                                    <div class="card h-100
-                    {% if sw.status != 'reachable' %}
-                        border-danger
-                    {% else %}
-                        border-success
-                    {% endif %}
-                ">
-                                        <div class="card-header
-                        {% if sw.status != 'reachable' %}
-                            bg-danger
-                        {% else %}
-                            bg-success
-                        {% endif %}
-                        text-white
-                    ">
-                                            {{ sw.device_name }}
-                                            <span class="badge bg-dark float-end">
-                            {{ sw.vendor|upper }}
-                        </span>
+                            {# Break row when structure changes #}
+                            {% if not forloop.first %}
+                                {% with prev=switch_data|slice:forloop.counter0|last %}
+                                    {% if sw.cpu|is_dict != prev.cpu|is_dict %}
                                         </div>
+                                        <div class="row g-4 mt-2">
+                                    {% endif %}
+                                {% endwith %}
+                            {% endif %}
 
-                                        <div class="card-body">
+                            <div class="col-xl-3 col-lg-4 col-md-6">
+                                <div class="card h-100">
 
-                                            <p><strong>IP:</strong> {{ sw.device_ip }}</p>
+                                    <div class="card-header bg-success text-white">
+                                        {{ sw.device_name }}
+                                    </div>
+
+                                    <div class="card-body">
+                                        <p><strong>IP:</strong> {{ sw.device_ip }}</p>
+
+                                        {% if sw.cpu|is_dict %}
                                             <p>
-                                                <strong>Status:</strong>
-                                                {% if sw.status == "reachable" %}
-                                                    Reachable
-                                                {% else %}
-                                                    Unreachable
+                                                <strong>CPU:</strong>
+                                                Slot‑1 {{ sw.cpu.slot_1|default:"0" }}%
+                                                {% if sw.cpu.slot_2 %}
+                                                    / Slot‑2 {{ sw.cpu.slot_2 }}%
                                                 {% endif %}
                                             </p>
-
-                                            <!-- ========================== -->
-                                            <!-- CPU -->
-                                            <!-- ========================== -->
-                                            {% if sw.vendor == "hp" %}
-                                                {% if sw.cpu %}
-                                                    <p>
-                                                        <strong>CPU Utilization:</strong>
-                                                        Slot‑1 {{ sw.cpu.slot_1|default:"0" }}%
-                                                        /
-                                                        Slot‑2 {{ sw.cpu.slot_2|default:"0" }}%
-                                                    </p>
-                                                {% endif %}
-                                            {% else %}
-                                                <p>
-                                                    <strong>CPU Utilization:</strong> {{ sw.cpu }}%
-                                                </p>
-                                            {% endif %}
-
-                                            <!-- ========================== -->
-                                            <!-- MEMORY -->
-                                            <!-- ========================== -->
-                                            {% if sw.vendor == "hp" %}
-                                                {% if sw.memory %}
-                                                    <p>
-                                                        <strong>Memory:</strong>
-                                                        Slot‑1 {{ sw.memory.slot_1 }}%
-                                                        /
-                                                        Slot‑2 {{ sw.memory.slot_2 }}%
-                                                    </p>
-                                                {% endif %}
-                                            {% else %}
-                                                <p>
-                                                    <strong>Memory Utilization:</strong> {{ sw.memory|subtract_100 }}%
-                                                </p>
-                                            {% endif %}
-
-                                            <!-- ========================== -->
-                                            <!-- FAN -->
-                                            <!-- ========================== -->
-                                            {% if sw.fan %}
-                                                <p class="{% if sw.fan.normal != sw.fan.total %}text-danger{% endif %}">
-                                                    <strong>Fans:</strong>
-                                                    {{ sw.fan.normal }}/{{ sw.fan.total }}
-                                                    {% if sw.fan.normal != sw.fan.total %}
-                                                        <span class="blink-flag">🚩🚩</span>
-                                                    {% endif %}
-                                                </p>
-                                            {% endif %}
-
-                                            <!-- ========================== -->
-                                            <!-- POWER -->
-                                            <!-- ========================== -->
-                                            {% if sw.power %}
-                                                <p class="{% if sw.power.normal != sw.power.total %}text-danger{% endif %}">
-                                                    <strong>Power:</strong>
-                                                    {{ sw.power.normal }}/{{ sw.power.total }}
-                                                    {% if sw.power.normal != sw.power.total %}
-                                                        <span class="blink-flag">🚩🚩</span>
-                                                    {% endif %}
-                                                </p>
-                                            {% endif %}
-
-                                            {% if sw.error %}
-                                                <p class="text-danger">{{ sw.error }}</p>
-                                            {% endif %}
-
-                                        </div>
+                                        {% else %}
+                                            <p><strong>CPU:</strong> {{ sw.cpu }}%</p>
+                                        {% endif %}
                                     </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endfor %}
 
-                {% else %}
-                    <div class="alert alert-warning">
-                        Switch health file not found.
-                    </div>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                        </div>
+
                 {% endif %}
             </div>
 
