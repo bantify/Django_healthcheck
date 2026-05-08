@@ -518,6 +518,20 @@
                                         {% else %}
                                             <p><strong>Memory:</strong> {{ sw.memory }}%</p>
                                         {% endif %}
+                                        {% if sw.fan %}
+                                            <p>
+                                                <strong>Fan:</strong>
+                                                Fan(Total/Normal): {{ sw.fan.total }}/{{ sw.fan.normal }}
+
+                                            </p>
+                                        {% endif %}
+                                        {% if sw.power %}
+                                            <p>
+                                                <strong>Power:</strong>
+                                                Power(Total/Normal): {{ sw.power.total }}/{{ sw.power.normal }}
+
+                                            </p>
+                                        {% endif %}
                                     </div>
 
                                 </div>
