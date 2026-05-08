@@ -504,7 +504,7 @@
                                                     / Slot‑2 {{ sw.cpu.slot_2 }}%
                                                 {% endif %}
                                             </p>
-                                        {% else %}
+                                        {% else if sw.cpu %}
                                             <p><strong>CPU:</strong> {{ sw.cpu }}%</p>
                                         {% endif %}
                                         {% if sw.memory.slot_1 %}
@@ -520,15 +520,15 @@
                                         {% endif %}
                                         {% if sw.fan %}
                                             <p>
-                                                <strong>Fan:</strong>
-                                                Fan(Total/Normal): {{ sw.fan.total }}/{{ sw.fan.normal }}
+                                                <strong>Fan(Total/Normal):</strong>
+                                                {{ sw.fan.total }}/{{ sw.fan.normal }}
 
                                             </p>
                                         {% endif %}
                                         {% if sw.power %}
                                             <p>
-                                                <strong>Power:</strong>
-                                                Power(Total/Normal): {{ sw.power.total }}/{{ sw.power.normal }}
+                                                <strong>Power(Total/Normal):</strong>
+                                                {{ sw.power.total }}/{{ sw.power.normal }}
 
                                             </p>
                                         {% endif %}
