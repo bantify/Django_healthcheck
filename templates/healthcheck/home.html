@@ -472,10 +472,10 @@
                     <div class="row g-4">
                         {% for sw in switch_data %}
 
-                            {# Break row when structure changes #}
+                            {# ✅ break row when CPU structure changes #}
                             {% if not forloop.first %}
                                 {% with prev=switch_data|slice:forloop.counter0|last %}
-                                    {% if sw.cpu|is_dict != prev.cpu|is_dict %}
+                                    {% if sw.cpu.slot_1 and not prev.cpu.slot_1 or not sw.cpu.slot_1 and prev.cpu.slot_1 %}
                                         </div>
                                         <div class="row g-4 mt-2">
                                     {% endif %}
@@ -492,10 +492,10 @@
                                     <div class="card-body">
                                         <p><strong>IP:</strong> {{ sw.device_ip }}</p>
 
-                                        {% if sw.cpu|is_dict %}
+                                        {% if sw.cpu.slot_1 %}
                                             <p>
                                                 <strong>CPU:</strong>
-                                                Slot‑1 {{ sw.cpu.slot_1|default:"0" }}%
+                                                Slot‑1 {{ sw.cpu.slot_1 }}%
                                                 {% if sw.cpu.slot_2 %}
                                                     / Slot‑2 {{ sw.cpu.slot_2 }}%
                                                 {% endif %}
