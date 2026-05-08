@@ -472,9 +472,9 @@
                     {% regroup switch_data by vendor as vendor_groups %}
 
                     {% for group in vendor_groups %}
-                        <h5 class="mb-3 mt-4 text-uppercase">
-                            {{ group.grouper }} Switches
-                        </h5>
+{#                        <h5 class="mb-3 mt-4 text-uppercase">#}
+{#                            {{ group.grouper }} Switches#}
+{#                        </h5>#}
 
                         <div class="row g-4">
                             {% for sw in group.list %}
