@@ -336,23 +336,47 @@
                                                 {{ s.total_nodes }}/
                                                 {{ s.ok_nodes }}/
                                                 {{ s.not_ok_nodes }}
+                                                {% if s.not_ok_nodes != 0 %}
+                                                        <span class="blink-flag">🚩🚩</span>
+                                                {% endif %}
                                             </h6>
 
                                             <!-- Disks -->
                                             <h6>Disks(Total/Ok/Not ok):
                                                 {{ s.total_disks }}/
                                                 {{ s.ok_disks }}/
-                                                {{ s.not_ok_disks }}</h6>
+                                                {{ s.not_ok_disks }}
+                                                {% if s.not_ok_disks != 0 %}
+                                                        <span class="blink-flag">🚩🚩</span>
+                                                {% endif %}                                                
+                                            </h6>
                                             <!-- Cages -->
                                             <h6>Cages(Total/Ok/Not ok):
                                                 {{ s.total_cage }}/
                                                 {{ s.ok_cage }}/
-                                                {{ s.not_ok_cage }}</h6>
+                                                {{ s.not_ok_cage }}
+                                                {% if s.not_ok_cage != 0 %}
+                                                        <span class="blink-flag">🚩🚩</span>
+                                                {% endif %}                                                  
+                                            </h6>
                                             <!-- Fans -->
                                             <h6>Fans(Total/Ok/Not ok):
                                                 {{ s.total_fan }}/
                                                 {{ s.ok_fan }}/
-                                                {{ s.not_ok_fan }}</h6>
+                                                {{ s.not_ok_fan }}
+                                                {% if s.not_ok_fan != 0 %}
+                                                        <span class="blink-flag">🚩🚩</span>
+                                                {% endif %}                                                  
+                                            </h6>
+                                            <!-- Fans -->
+                                            <h6>PSU(Total/Ok/Not ok):
+                                                {{ s.total_psu }}/
+                                                {{ s.ok_psu }}/
+                                                {{ s.not_ok_psu }}
+                                                {% if s.not_ok_psu != 0 %}
+                                                        <span class="blink-flag">🚩🚩</span>
+                                                {% endif %}                                                   
+                                            </h6>
                                             <!-- Alerts -->
                                             <h6>Alerts</h6>
                                             <p><strong>Total:</strong> {{ s.total_alerts }}</p>
