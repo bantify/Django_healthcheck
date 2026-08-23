@@ -368,7 +368,7 @@
                                                         <span class="blink-flag">🚩🚩</span>
                                                 {% endif %}                                                  
                                             </h6>
-                                            <!-- Fans -->
+                                            <!-- PSU -->
                                             <h6>PSU(Total/Ok/Not ok):
                                                 {{ s.total_psu }}/
                                                 {{ s.ok_psu }}/
@@ -546,6 +546,9 @@
                                             <p>
                                                 <strong>Fan(Total/Normal):</strong>
                                                 {{ sw.fan.total }}/{{ sw.fan.normal }}
+                                                {% if sw.fan.total != sw.fan.normal %}
+                                                        <span class="blink-flag">🚩🚩</span>
+                                                {% endif %}                                                
 
                                             </p>
                                         {% endif %}
@@ -553,7 +556,9 @@
                                             <p>
                                                 <strong>Power(Total/Normal):</strong>
                                                 {{ sw.power.total }}/{{ sw.power.normal }}
-
+                                                {% if sw.power.total != sw.power.normal %}
+                                                        <span class="blink-flag">🚩🚩</span>
+                                                {% endif %}
                                             </p>
                                         {% endif %}
                                     </div>
